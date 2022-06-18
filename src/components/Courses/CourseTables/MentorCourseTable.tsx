@@ -13,6 +13,7 @@ export interface MentorCourseProps {
   numberFinished: number;
   finishedPercentage: number;
   avg: number;
+  createdDate?: number;
 }
 
 export interface MentorCourseTableProps {
@@ -28,6 +29,7 @@ export const exampleMentorCourses: MentorCourseProps[] = [
     numberFinished: 20,
     finishedPercentage: 20,
     avg: 8,
+    createdDate: Date.now(),
   },
   {
     name: "Course 1",
@@ -37,6 +39,7 @@ export const exampleMentorCourses: MentorCourseProps[] = [
     numberFinished: 20,
     finishedPercentage: 20,
     avg: 8,
+    createdDate: Date.now(),
   },
   {
     name: "Course 1",
@@ -46,6 +49,7 @@ export const exampleMentorCourses: MentorCourseProps[] = [
     numberFinished: 20,
     finishedPercentage: 20,
     avg: 8,
+    createdDate: Date.now(),
   },
   {
     name: "Course 1",
@@ -55,6 +59,7 @@ export const exampleMentorCourses: MentorCourseProps[] = [
     numberFinished: 20,
     finishedPercentage: 20,
     avg: 8,
+    createdDate: Date.now(),
   },
 ];
 

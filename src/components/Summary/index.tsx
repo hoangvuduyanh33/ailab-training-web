@@ -5,10 +5,10 @@ import { setSelectedTag, summarySelector } from "src/store/summary";
 import { userSelector } from "src/store/user";
 import MenteeCourseTable, {
   exampleMenteeCourses,
-} from "./CourseTables/MenteeCourseTable";
+} from "../Courses/CourseTables/MenteeCourseTable";
 import MentorCourseTable, {
   exampleMentorCourses,
-} from "./CourseTables/MentorCourseTable";
+} from "../Courses/CourseTables/MentorCourseTable";
 
 interface TagOverviewProps {
   name: string;

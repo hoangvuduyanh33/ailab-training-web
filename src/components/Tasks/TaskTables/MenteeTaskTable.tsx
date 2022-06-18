@@ -4,62 +4,63 @@ import {
   TableHeadRowLayout,
   TableLayout,
 } from "src/components/common/TableLayouts";
+import { timestampToDate } from "src/components/utils/time";
 
-export interface MenteeCourseProps {
+export interface MenteeTaskProps {
   name: string;
-  courseId?: string;
+  taskId?: string;
   mentorName?: string;
   mentorUsername?: string;
   status: string;
   avg: number;
-  finishedTasks: number;
-  totalTasks: number;
+  joinedDate?: number;
+  finishedDate?: number;
 }
 
-export interface MenteeCourseTableProps {
-  courses: MenteeCourseProps[];
+export interface MenteeTaskTableProps {
+  tasks: MenteeTaskProps[];
 }
 
-export const exampleMenteeCourses: MenteeCourseProps[] = [
+export const exampleMenteeTasks: MenteeTaskProps[] = [
   {
-    name: "Courses 1 Courses 1 Courses 1 Courses 1 Courses 1 Courses 1 Courses 1 ",
+    name: "Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 ",
     mentorName: "Nguyen Dinh Tuan",
     mentorUsername: "ndtuan",
     status: "Open",
     avg: 8.9,
-    finishedTasks: 10,
-    totalTasks: 15,
+    joinedDate: Date.now(),
+    finishedDate: Date.now(),
   },
   {
-    name: "Courses 2",
+    name: "Tasks 2",
     mentorName: "Nguyen Dinh Tuan",
     mentorUsername: "ndtuan",
     status: "Aborted",
     avg: 5.3,
-    finishedTasks: 10,
-    totalTasks: 15,
+    joinedDate: Date.now(),
+    finishedDate: Date.now(),
   },
   {
-    name: "Courses 2",
+    name: "Tasks 2",
     mentorName: "Nguyen Dinh Tuan",
     mentorUsername: "ndtuan",
     status: "Finished",
     avg: 8.0,
-    finishedTasks: 10,
-    totalTasks: 15,
+    joinedDate: Date.now(),
+    finishedDate: Date.now(),
   },
   {
-    name: "Courses 2",
+    name: "Tasks 2",
     mentorName: "Nguyen Dinh Tuan",
     mentorUsername: "ndtuan",
     status: "Closed",
     avg: 8.0,
-    finishedTasks: 10,
-    totalTasks: 15,
+    joinedDate: Date.now(),
+    finishedDate: Date.now(),
   },
 ];
 
-const TableRow = ({ course }: { course: MenteeCourseProps }) => {
+const TableRow = ({ task }: { task: MenteeTaskProps }) => {
   const statusColor = (status: string) => {
     if (status === "Open") {
       return "primary.200";
@@ -86,41 +87,37 @@ const TableRow = ({ course }: { course: MenteeCourseProps }) => {
     >
       <Flex
         paddingLeft={"60px"}
-        width="40%"
+        width="30%"
         overflow={"hidden"}
         paddingRight="50px"
         cursor={"pointer"}
         _hover={{ color: "primary.200" }}
       >
-        {course.name}
+        {task.name}
       </Flex>
-      <Flex width={"20%"} cursor="pointer" _hover={{ color: "primary.200" }}>
-        {course.mentorName}
+      <Flex width={"15%"} cursor="pointer" _hover={{ color: "primary.200" }}>
+        {task.mentorName}
       </Flex>
-      <Flex width={"10%"} _hover={{ color: statusColor(course.status) }}>
-        {course.status}
+      <Flex width={"15%"} _hover={{ color: statusColor(task.status) }}>
+        {task.status}
       </Flex>
-      <Flex width={"10%"}>{course.avg}</Flex>
-      <Flex width={"10%"}>
-        {((course.finishedTasks / course.totalTasks) * 100).toFixed(2)}
-        {"%"}
+      <Flex width={"10%"}>{task.avg}</Flex>
+      <Flex width={"15%"}>
+        {task.joinedDate ? timestampToDate(task.joinedDate) : ""}
       </Flex>
-      <Flex width={"10%"}>
-        {course.finishedTasks} / {course.totalTasks}
+      <Flex width={"15%"}>
+        {task.finishedDate ? timestampToDate(task.finishedDate) : ""}
       </Flex>
     </Flex>
   );
 };
 
-const MenteeCourseTable = (props: MenteeCourseTableProps) => {
-  const { courses } = props;
-  console.log("courses = ", courses);
+const MenteeTaskTable = (props: MenteeTaskTableProps) => {
+  const { tasks } = props;
+  console.log("tasks = ", tasks);
   const TableHead = () => {
     return (
-      <TableHeadLayout
-        tableName="Courses"
-        sideText={`${courses.length} courses`}
-      >
+      <TableHeadLayout tableName="Tasks" sideText={`${tasks.length} tasks`}>
         <Flex
           bgColor={"primary.400"}
           mr="50px"
@@ -132,7 +129,7 @@ const MenteeCourseTable = (props: MenteeCourseTableProps) => {
             bgColor: "primary.200",
           }}
         >
-          Join courses
+          Browse tasks
         </Flex>
       </TableHeadLayout>
     );
@@ -140,28 +137,28 @@ const MenteeCourseTable = (props: MenteeCourseTableProps) => {
   const TableHeadRow = () => {
     return (
       <TableHeadRowLayout>
-        <Flex paddingLeft={"60px"} width="40%">
+        <Flex paddingLeft={"60px"} width="30%">
           Name
         </Flex>
-        <Flex width={"20%"}>Mentor</Flex>
-        <Flex width={"10%"}>Status</Flex>
+        <Flex width={"15%"}>Mentor</Flex>
+        <Flex width={"15%"}>Status</Flex>
         <Flex width={"10%"}>Avg</Flex>
-        <Flex width={"10%"}>Progress</Flex>
-        <Flex width={"10%"}>FT/TT</Flex>
+        <Flex width={"15%"}>Joined</Flex>
+        <Flex width={"15%"}>Finished</Flex>
       </TableHeadRowLayout>
     );
   };
 
   return (
-    <TableLayout width="1200px" mt={10}>
+    <TableLayout width="1300px" mt={10}>
       <TableHead />
       <Divider />
       <TableHeadRow />
       <Divider />
-      {courses.map((course) => {
-        return <TableRow course={course} />;
+      {tasks.map((task) => {
+        return <TableRow task={task} />;
       })}
     </TableLayout>
   );
 };
-export default MenteeCourseTable;
+export default MenteeTaskTable;
