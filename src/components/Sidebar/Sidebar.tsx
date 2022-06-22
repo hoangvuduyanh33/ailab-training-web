@@ -37,8 +37,8 @@ const MenteeSidebarItems = () => {
           navigate("/");
         }}
       />
-      <SidebarItem name="Courses" onClick={() => navigate("courses")} />
-      <SidebarItem name="Tasks" onClick={() => navigate("tasks")} />
+      <SidebarItem name="Courses" onClick={() => navigate("/courses")} />
+      <SidebarItem name="Tasks" onClick={() => navigate("/tasks")} />
       <SidebarItem name="Log out" onClick={() => navigate("/")} />
     </>
   );

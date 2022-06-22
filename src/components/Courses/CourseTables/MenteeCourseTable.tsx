@@ -93,7 +93,7 @@ const TableRow = ({ course }: { course: MenteeCourseProps }) => {
       width="100%"
       height="80px"
       color={"whiteAlpha.500"}
-      _hover={{ bgColor: "gray.800" }}
+      _hover={{ bgColor: "gray.800", borderRadius: "0px" }}
     >
       <Flex
         paddingLeft={"60px"}

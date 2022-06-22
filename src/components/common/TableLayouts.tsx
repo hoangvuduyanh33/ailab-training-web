@@ -16,7 +16,7 @@ export const TableHeadLayout = ({
   sideText,
   children,
 }: {
-  tableName: string;
+  tableName: any;
   sideText: string;
   children: any;
 }) => {
@@ -26,7 +26,7 @@ export const TableHeadLayout = ({
       alignItems={"center"}
       width="100%"
       height="80px"
-      _hover={{ bgColor: "gray.800" }}
+      _hover={{ bgColor: "gray.800", borderTopRadius: "16px" }}
     >
       <Flex fontSize={"30px"} ml={"50px"}>
         {tableName}

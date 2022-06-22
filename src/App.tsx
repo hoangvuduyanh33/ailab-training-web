@@ -9,6 +9,7 @@ import Layout from "./components/Layout/Layout";
 const Summary = lazy(() => import("src/components/Summary"));
 const Courses = lazy(() => import("src/components/Courses"));
 const Tasks = lazy(() => import("src/components/Tasks"));
+const CreateCourse = lazy(() => import("src/components/Courses/CreateCourse"));
 const App: React.FC = () => {
   return (
     <>
@@ -19,6 +20,7 @@ const App: React.FC = () => {
               <Route path="/" element={<Summary />} />
               <Route path="courses" element={<Courses />} />
               <Route path="tasks" element={<Tasks />} />
+              <Route path="create-course" element={<CreateCourse />} />
             </Route>
           </Routes>
         </BrowserRouter>

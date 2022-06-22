@@ -6,7 +6,7 @@ const Layout = () => {
   return (
     <Box width={"full"} height="auto">
       <Sidebar isOpen={true} onToggle={() => {}} />
-      <Box flex={"1"} minW="0" pl="220px">
+      <Box flex={"1"} minW="0" pl="100px">
         <Outlet />
       </Box>
     </Box>
