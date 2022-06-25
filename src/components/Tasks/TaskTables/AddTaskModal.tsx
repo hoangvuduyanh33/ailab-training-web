@@ -8,25 +8,12 @@ import {
   EditablePreview,
   EditableInput,
   Text,
-  EditableTextarea,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
-  Textarea,
   Flex,
-  Box,
   ModalFooter,
   Button,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import { TextareaAutosizeProps } from "react-textarea-autosize";
-import remarkGfm from "remark-gfm";
-import { Remark, useRemark } from "react-remark";
+import { useEffect, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
-import { AutoResizeTextarea } from "src/components/common/AutoResizeTextArea";
 interface AddTaskModalProps {
   isOpen: boolean;
   onClose: any;
@@ -40,9 +27,6 @@ const AddTaskModal = (props: AddTaskModalProps) => {
   useEffect(() => {}, []);
   const handleChangeTitle = (e: any) => {
     setTitle(e.target.value);
-  };
-  const handleChangeContent = (e: any) => {
-    setContent(e.target.value);
   };
   return (
     <Modal

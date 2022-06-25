@@ -22,6 +22,65 @@ export interface MentorTaskTableProps {
   tasks: MentorTaskProps[];
 }
 
+export const MentorTaskHeadRow = () => {
+  return (
+    <TableHeadRowLayout>
+      <Flex paddingLeft={"60px"} width="30%">
+        Name
+      </Flex>
+      <Flex width={"10%"}>Assigned</Flex>
+      <Flex width={"10%"}>Finished</Flex>
+      <Flex width={"10%"}>Finished rate</Flex>
+      <Flex width={"10%"}>Status</Flex>
+      <Flex width={"10%"}>Avg</Flex>
+      <Flex width={"15%"}>Created Date</Flex>
+    </TableHeadRowLayout>
+  );
+};
+
+export const MentorTaskRow = ({
+  task,
+  ...props
+}: {
+  task: MentorTaskProps;
+  [restProps: string]: any;
+}) => {
+  return (
+    <Flex
+      flexDir="row"
+      alignItems={"center"}
+      width="100%"
+      height="80px"
+      color={"whiteAlpha.500"}
+      _hover={{ bgColor: "gray.800" }}
+      {...props}
+    >
+      <Flex
+        paddingLeft={"60px"}
+        width="30%"
+        overflow={"hidden"}
+        paddingRight="50px"
+        cursor={"pointer"}
+        _hover={{ color: "primary.200" }}
+      >
+        {task.name}
+      </Flex>
+      <Flex width={"10%"} cursor="pointer" _hover={{ color: "primary.200" }}>
+        {task.numberAttend}
+      </Flex>
+      <Flex width={"10%"}>{task.numberFinished}</Flex>
+      <Flex width={"10%"}>
+        {((task.numberFinished / task.numberAttend) * 100).toFixed(2)}
+      </Flex>
+      <Flex width={"10%"}>{task.status}</Flex>
+      <Flex width={"10%"}>{task.avg}</Flex>
+      <Flex width={"15%"}>
+        {task.createdDate ? timestampToDate(task.createdDate) : ""}
+      </Flex>
+    </Flex>
+  );
+};
+
 export const exampleMentorTasks: MentorTaskProps[] = [
   {
     name: "Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 ",
@@ -57,42 +116,6 @@ export const exampleMentorTasks: MentorTaskProps[] = [
   },
 ];
 
-const TableRow = ({ task }: { task: MentorTaskProps }) => {
-  return (
-    <Flex
-      flexDir="row"
-      alignItems={"center"}
-      width="100%"
-      height="80px"
-      color={"whiteAlpha.500"}
-      _hover={{ bgColor: "gray.800" }}
-    >
-      <Flex
-        paddingLeft={"60px"}
-        width="30%"
-        overflow={"hidden"}
-        paddingRight="50px"
-        cursor={"pointer"}
-        _hover={{ color: "primary.200" }}
-      >
-        {task.name}
-      </Flex>
-      <Flex width={"10%"} cursor="pointer" _hover={{ color: "primary.200" }}>
-        {task.numberAttend}
-      </Flex>
-      <Flex width={"10%"}>{task.numberFinished}</Flex>
-      <Flex width={"10%"}>
-        {((task.numberFinished / task.numberAttend) * 100).toFixed(2)}
-      </Flex>
-      <Flex width={"10%"}>{task.status}</Flex>
-      <Flex width={"10%"}>{task.avg}</Flex>
-      <Flex width={"15%"}>
-        {task.createdDate ? timestampToDate(task.createdDate) : ""}
-      </Flex>
-    </Flex>
-  );
-};
-
 const MentorTaskTable = (props: MentorTaskTableProps) => {
   const { tasks } = props;
   console.log("tasks = ", tasks);
@@ -100,7 +123,7 @@ const MentorTaskTable = (props: MentorTaskTableProps) => {
   const TableHead = () => {
     return (
       <>
-        <TableHeadLayout tableName="Tasks" sideText={`${tasks.length} tasks`}>
+        <TableHeadLayout tableName={"Tasks"} sideText={`${tasks.length} tasks`}>
           <Flex
             bgColor={"primary.400"}
             mr="50px"
@@ -120,30 +143,15 @@ const MentorTaskTable = (props: MentorTaskTableProps) => {
       </>
     );
   };
-  const TableHeadRow = () => {
-    return (
-      <TableHeadRowLayout>
-        <Flex paddingLeft={"60px"} width="30%">
-          Name
-        </Flex>
-        <Flex width={"10%"}>Assigned</Flex>
-        <Flex width={"10%"}>Finished</Flex>
-        <Flex width={"10%"}>Finished rate</Flex>
-        <Flex width={"10%"}>Status</Flex>
-        <Flex width={"10%"}>Avg</Flex>
-        <Flex width={"15%"}>Created Date</Flex>
-      </TableHeadRowLayout>
-    );
-  };
 
   return (
     <TableLayout width="1300px" mt={10}>
       <TableHead />
       <Divider />
-      <TableHeadRow />
+      <MentorTaskHeadRow />
       <Divider />
-      {tasks.map((task) => {
-        return <TableRow task={task} />;
+      {tasks.map((task: MentorTaskProps) => {
+        return <MentorTaskRow task={task} />;
       })}
     </TableLayout>
   );
