@@ -1,4 +1,5 @@
 import { Divider, Flex, Spacer } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import {
   TableHeadLayout,
   TableHeadRowLayout,
@@ -8,6 +9,7 @@ import { timestampToDate } from "src/components/utils/time";
 
 export interface MenteeTaskProps {
   name: string;
+  id?: string;
   taskId?: string;
   mentorName?: string;
   mentorUsername?: string;
@@ -24,6 +26,7 @@ export interface MenteeTaskTableProps {
 export const exampleMenteeTasks: MenteeTaskProps[] = [
   {
     name: "Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 ",
+    id: "1",
     mentorName: "Nguyen Dinh Tuan",
     mentorUsername: "ndtuan",
     status: "Open",
@@ -34,6 +37,7 @@ export const exampleMenteeTasks: MenteeTaskProps[] = [
   {
     name: "Tasks 2",
     mentorName: "Nguyen Dinh Tuan",
+    id: "2",
     mentorUsername: "ndtuan",
     status: "Aborted",
     avg: 5.3,
@@ -41,7 +45,8 @@ export const exampleMenteeTasks: MenteeTaskProps[] = [
     finishedDate: Date.now(),
   },
   {
-    name: "Tasks 2",
+    name: "Tasks 3",
+    id: "3",
     mentorName: "Nguyen Dinh Tuan",
     mentorUsername: "ndtuan",
     status: "Finished",
@@ -50,7 +55,8 @@ export const exampleMenteeTasks: MenteeTaskProps[] = [
     finishedDate: Date.now(),
   },
   {
-    name: "Tasks 2",
+    name: "Tasks 4",
+    id: "4",
     mentorName: "Nguyen Dinh Tuan",
     mentorUsername: "ndtuan",
     status: "Closed",
@@ -61,6 +67,7 @@ export const exampleMenteeTasks: MenteeTaskProps[] = [
 ];
 
 const TableRow = ({ task }: { task: MenteeTaskProps }) => {
+  const navigate = useNavigate();
   const statusColor = (status: string) => {
     if (status === "Open") {
       return "primary.200";
@@ -92,6 +99,9 @@ const TableRow = ({ task }: { task: MenteeTaskProps }) => {
         paddingRight="50px"
         cursor={"pointer"}
         _hover={{ color: "primary.200" }}
+        onClick={() => {
+          navigate(`/tasks/${task.id}`);
+        }}
       >
         {task.name}
       </Flex>

@@ -1,5 +1,6 @@
 import { Divider, Flex, Spacer, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   TableHeadLayout,
   TableHeadRowLayout,
@@ -10,7 +11,7 @@ import AddTaskModal from "./AddTaskModal";
 
 export interface MentorTaskProps {
   name: string;
-  taskId?: string;
+  id?: string;
   numberAttend: number;
   numberFinished: number;
   status: string;
@@ -45,6 +46,7 @@ export const MentorTaskRow = ({
   task: MentorTaskProps;
   [restProps: string]: any;
 }) => {
+  const navigate = useNavigate();
   return (
     <Flex
       flexDir="row"
@@ -62,6 +64,9 @@ export const MentorTaskRow = ({
         paddingRight="50px"
         cursor={"pointer"}
         _hover={{ color: "primary.200" }}
+        onClick={() => {
+          navigate(`${task.id}`);
+        }}
       >
         {task.name}
       </Flex>
@@ -84,6 +89,7 @@ export const MentorTaskRow = ({
 export const exampleMentorTasks: MentorTaskProps[] = [
   {
     name: "Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 ",
+    id: "1",
     numberAttend: 200,
     numberFinished: 100,
     status: "Open",
@@ -92,6 +98,7 @@ export const exampleMentorTasks: MentorTaskProps[] = [
   },
   {
     name: "Tasks 2",
+    id: "2",
     numberAttend: 200,
     numberFinished: 100,
     status: "Closed",
@@ -99,7 +106,8 @@ export const exampleMentorTasks: MentorTaskProps[] = [
     createdDate: Date.now(),
   },
   {
-    name: "Tasks 2",
+    name: "Tasks 3",
+    id: "3",
     numberAttend: 200,
     numberFinished: 100,
     status: "Closed",
@@ -107,7 +115,8 @@ export const exampleMentorTasks: MentorTaskProps[] = [
     createdDate: Date.now(),
   },
   {
-    name: "Tasks 2",
+    name: "Tasks 4",
+    id: "4",
     numberAttend: 200,
     numberFinished: 100,
     status: "Closed",

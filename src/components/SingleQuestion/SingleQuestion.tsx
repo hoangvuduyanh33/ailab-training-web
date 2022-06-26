@@ -1,4 +1,4 @@
-import { Divider, Flex, Image } from "@chakra-ui/react";
+import { Button, Divider, Flex, Image, Spacer } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useQuery } from "src/hooks/useQuery";
 import { fetchSingleQuestion } from "src/services/services";
@@ -8,6 +8,7 @@ import { timestampToDate } from "../utils/time";
 import Markdown from "react-markdown";
 import { useNavigate } from "react-router-dom";
 import MDEditor from "@uiw/react-md-editor";
+import MarkdownPreview from "@uiw/react-markdown-preview";
 
 export interface ReplyProps {
   userName: string;
@@ -46,6 +47,7 @@ const ChatItem = (props: ChatItemProps) => {
         width={"1200px"}
         border={"1px solid rgba(255,255,255,0.5)"}
         borderRadius="16px"
+        bgColor="#101414"
       >
         <Flex
           width="full"
@@ -79,7 +81,7 @@ const ChatItem = (props: ChatItemProps) => {
           pb={5}
           flexDirection="column"
         >
-          <Markdown>{content}</Markdown>
+          <MarkdownPreview source={content} />
         </Flex>
       </Flex>
     </Flex>
@@ -142,14 +144,22 @@ const SingleQuestion = () => {
         })}
       <Flex flexDir="row" maxWidth={"1300px"} mt={5}>
         <Image src="./logo192.png" boxSize={"40px"} mr={5} />
-        <MDEditor
-          preview="edit"
-          style={{ width: "1200px" }}
-          value={reply}
-          onChange={(value) => {
-            setReply(value!);
-          }}
-        />
+        <Flex flexDir={"column"}>
+          <MDEditor
+            preview="edit"
+            style={{ width: "1200px" }}
+            value={reply}
+            onChange={(value) => {
+              setReply(value!);
+            }}
+          />
+          <Flex flexDirection={"row"}>
+            <Spacer />
+            <Button mt={2} colorScheme={"primary"} width="150px">
+              Confirm
+            </Button>
+          </Flex>
+        </Flex>
       </Flex>
     </PageLayout>
   );
