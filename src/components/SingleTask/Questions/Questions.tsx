@@ -1,4 +1,5 @@
 import { Box, Divider, Flex, Spacer, Text } from "@chakra-ui/react";
+import { ChatIcon } from "@chakra-ui/icons";
 import { time } from "console";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -69,7 +70,10 @@ const QuestionRow = (props: QuestionProps) => {
           </Flex>
         </Flex>
         <Spacer />
-        <Flex fontSize={"sm"}>{numReply}</Flex>
+        <Flex fontSize={"sm"} flexDir="row" alignItems={"center"}>
+          <ChatIcon boxSize={"15px"} mr={2} />
+          {numReply}
+        </Flex>
       </Flex>
       <Divider />
     </Flex>
@@ -92,7 +96,7 @@ const Questions = () => {
         width={"full"}
         bgColor="gray.700"
         flexDirection={"row"}
-        fontSize="xl"
+        fontSize="3xl"
         alignItems={"center"}
         height="100px"
         borderTopRadius={"16px"}

@@ -10,7 +10,7 @@ export interface MenteeCourseProps {
   name: string;
   courseId?: string;
   mentorName?: string;
-  mentorUsername?: string;
+  mentorId?: string;
   status: string;
   avg: number;
   finishedTasks: number;
@@ -27,7 +27,7 @@ export const exampleMenteeCourses: MenteeCourseProps[] = [
   {
     name: "Courses 1 Courses 1 Courses 1 Courses 1 Courses 1 Courses 1 Courses 1 ",
     mentorName: "Nguyen Dinh Tuan",
-    mentorUsername: "ndtuan",
+    mentorId: "ndtuan",
     status: "Open",
     avg: 8.9,
     finishedTasks: 10,
@@ -38,7 +38,7 @@ export const exampleMenteeCourses: MenteeCourseProps[] = [
   {
     name: "Courses 2",
     mentorName: "Nguyen Dinh Tuan",
-    mentorUsername: "ndtuan",
+    mentorId: "ndtuan",
     status: "Aborted",
     avg: 5.3,
     finishedTasks: 10,
@@ -49,7 +49,7 @@ export const exampleMenteeCourses: MenteeCourseProps[] = [
   {
     name: "Courses 2",
     mentorName: "Nguyen Dinh Tuan",
-    mentorUsername: "ndtuan",
+    mentorId: "ndtuan",
     status: "Finished",
     avg: 8.0,
     finishedTasks: 10,
@@ -60,7 +60,7 @@ export const exampleMenteeCourses: MenteeCourseProps[] = [
   {
     name: "Courses 2",
     mentorName: "Nguyen Dinh Tuan",
-    mentorUsername: "ndtuan",
+    mentorId: "ndtuan",
     status: "Closed",
     avg: 8.0,
     finishedTasks: 10,

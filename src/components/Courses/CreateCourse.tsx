@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Divider,
   Editable,
   EditableInput,
   EditablePreview,
@@ -40,7 +41,9 @@ const BrowseTaskModal = (props: BrowseTaskModalProps) => {
             <TableHeadLayout tableName={"All tasks"} sideText={"4 tasks"}>
               <></>
             </TableHeadLayout>
+            <Divider />
             <MentorTaskHeadRow />
+            <Divider />
             {exampleMentorTasks.map((task) => {
               return (
                 <MentorTaskRow

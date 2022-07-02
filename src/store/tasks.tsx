@@ -6,7 +6,7 @@ export interface TasksState {
 }
 
 const initialState: TasksState = {
-  tabIndex: 1,
+  tabIndex: 0,
 };
 
 export const tasksSlice = createSlice({

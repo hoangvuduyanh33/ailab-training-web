@@ -1,5 +1,5 @@
 import { Box, BoxProps, Flex, Image } from "@chakra-ui/react";
-import { NavLink, useNavigate, Outlet, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAppSelector } from "src/app/hooks";
 import { userSelector } from "src/store/user";
 
@@ -10,36 +10,32 @@ interface SidebarProps {
 }
 
 const SidebarItem = (props: any) => {
-  const { name, ...restProps } = props;
+  const { name, href, ...restProps } = props;
   return (
-    <Flex
-      _hover={{ color: "primary.200" }}
-      pl={3}
-      cursor="pointer"
-      paddingTop={"10px"}
-      paddingBottom={"10px"}
-      paddingLeft="40px"
-      {...restProps}
-    >
-      {" "}
-      {name}{" "}
-    </Flex>
+    <Link to={href}>
+      <Flex
+        _hover={{ color: "primary.200" }}
+        pl={3}
+        cursor="pointer"
+        paddingTop={"10px"}
+        paddingBottom={"10px"}
+        paddingLeft="40px"
+        {...restProps}
+      >
+        {" "}
+        {name}{" "}
+      </Flex>
+    </Link>
   );
 };
 
 const MenteeSidebarItems = () => {
-  const navigate = useNavigate();
   return (
     <>
-      <SidebarItem
-        name="Home"
-        onClick={() => {
-          navigate("/");
-        }}
-      />
-      <SidebarItem name="Courses" onClick={() => navigate("/courses")} />
-      <SidebarItem name="Tasks" onClick={() => navigate("/tasks")} />
-      <SidebarItem name="Log out" onClick={() => navigate("/")} />
+      <SidebarItem name="Home" href="/" />
+      <SidebarItem name="Courses" href="/courses" />
+      <SidebarItem name="Tasks" href="tasks" />
+      <SidebarItem name="Log out" href="" />
     </>
   );
 };

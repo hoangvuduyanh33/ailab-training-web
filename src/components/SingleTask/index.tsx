@@ -10,7 +10,9 @@ import {
 } from "@chakra-ui/react";
 import MDEditor from "@uiw/react-md-editor";
 import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { fetchTask } from "src/services/services";
+import { setTabIndex, tasksSelector } from "src/store/tasks";
 import PageLayout from "../common/PageLayout";
 import Questions from "./Questions/Questions";
 
@@ -24,6 +26,8 @@ const SingleTask = () => {
     name: "",
     content: "",
   });
+  const { tabIndex } = useAppSelector(tasksSelector);
+  const dispatch = useAppDispatch();
   useEffect(() => {
     const data = fetchTask("", true);
     console.log("data = ", data);
@@ -39,7 +43,11 @@ const SingleTask = () => {
           <Flex>
             <Text fontSize={"3xl"}>{taskProps.name}</Text>
           </Flex>
-          <Tabs mt={6}>
+          <Tabs
+            mt={6}
+            onChange={(index) => dispatch(setTabIndex(index))}
+            index={tabIndex}
+          >
             <TabList color={"white"} borderColor="transparent">
               <Tab
                 _selected={{
