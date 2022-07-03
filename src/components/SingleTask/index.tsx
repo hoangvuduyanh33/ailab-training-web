@@ -15,6 +15,8 @@ import { fetchTask } from "src/services/services";
 import { setTabIndex, tasksSelector } from "src/store/tasks";
 import PageLayout from "../common/PageLayout";
 import Questions from "./Questions/Questions";
+import { MenteeSubmissionsTable } from "./Submissions/MenteeSubmissions";
+import { MentorSubmissionsTable } from "./Submissions/MentorSubmissions";
 
 export interface SingleTaskProps {
   name: string;
@@ -78,7 +80,7 @@ const SingleTask = () => {
                 </Flex>
               </TabPanel>
               <TabPanel>
-                <Flex></Flex>
+                <MentorSubmissionsTable />
               </TabPanel>
               <TabPanel>
                 <Questions />
