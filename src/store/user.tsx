@@ -44,10 +44,21 @@ export const userSlice = createSlice({
     setRole: (state, action: PayloadAction<string>) => {
       state.role = action.payload;
     },
+    setName: (state, action: PayloadAction<string>) => {
+      state.name = action.payload;
+    },
+    setEmail: (state, action: PayloadAction<string>) => {
+      if (action.payload.endsWith("@vnu.edu.vn")) {
+        state.username = action.payload.slice(0, action.payload.length - 11);
+      } else {
+        return;
+      }
+      state.email = action.payload;
+    },
   },
 });
 
-export const { setRole } = userSlice.actions;
+export const { setRole, setName, setEmail } = userSlice.actions;
 export const userSelector = (state: RootState) => state.user;
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

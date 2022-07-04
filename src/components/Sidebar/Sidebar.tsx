@@ -1,7 +1,8 @@
 import { Box, BoxProps, Flex, Image } from "@chakra-ui/react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "src/app/hooks";
-import { userSelector } from "src/store/user";
+import { setEmail, setRole, userSelector } from "src/store/user";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -30,12 +31,20 @@ const SidebarItem = (props: any) => {
 };
 
 const MenteeSidebarItems = () => {
+  const dispatch = useDispatch();
   return (
     <>
       <SidebarItem name="Home" href="/" />
       <SidebarItem name="Courses" href="/courses" />
       <SidebarItem name="Tasks" href="tasks" />
-      <SidebarItem name="Log out" href="" />
+      <SidebarItem
+        name="Log out"
+        href="/sign-in"
+        onClick={() => {
+          dispatch(setRole(""));
+          dispatch(setEmail(""));
+        }}
+      />
     </>
   );
 };
@@ -68,6 +77,8 @@ const AdminSidebarItems = () => {
 const Sidebar = (props: SidebarProps & BoxProps) => {
   const { role } = useAppSelector(userSelector);
   const { isOpen, onToggle, ...restProps } = props;
+
+  console.log("role = ", role);
 
   return (
     <Box

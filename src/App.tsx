@@ -12,6 +12,8 @@ import Summary from "./components/Summary";
 import Courses from "./components/Courses";
 import CreateCourse from "./components/Courses/CreateCourse";
 import Tasks from "./components/Tasks";
+import { SignIn } from "./components/AuthScreens/SignIn";
+import { SignUp } from "./components/AuthScreens/SignUp";
 
 const App: React.FC = () => {
   return (
@@ -19,6 +21,8 @@ const App: React.FC = () => {
       <Flex>
         <BrowserRouter>
           <Routes>
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
             <Route path="" element={<Layout />}>
               <Route index element={<Summary />} />
               <Route path="/courses">

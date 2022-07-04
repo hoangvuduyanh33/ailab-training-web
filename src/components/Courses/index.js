@@ -12,7 +12,7 @@ const Courses = () => {
   const { role } = useAppSelector(userSelector);
   return (
     <Box width="calc(100vw-220px)" fontSize="3xl" ml={220} mt={5}>
-      {role === "mentee" && (
+      {role === "mentor" && (
         <MentorCourseTable courses={exampleMentorCourses} />
       )}
       {role === "mentee" && (

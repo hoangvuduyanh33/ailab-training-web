@@ -138,7 +138,7 @@ const MentorCourseTable = (props: MentorCourseTableProps) => {
   console.log("courses = ", courses);
 
   return (
-    <TableLayout mt={7} width={"1200px"}>
+    <TableLayout mt={7} width={"1200px"} margin="auto">
       <TableHead sideText={`${courses.length} courses`} />
       <Divider />
       <TableHeadRow />
