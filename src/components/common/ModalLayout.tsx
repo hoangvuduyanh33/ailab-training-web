@@ -1,12 +1,23 @@
 import {
+  Button,
+  Flex,
   Modal,
   ModalBody,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spacer,
 } from "@chakra-ui/react";
 
-export default function ModalLayout(props: any) {
+interface ModalLayoutProps {
+  isOpen: boolean;
+  onClose: any;
+  children: any;
+  [restProps: string]: any;
+}
+
+export default function ModalLayout(props: ModalLayoutProps) {
   const { isOpen, onClose, children, ...restProps } = props;
   return (
     <Modal

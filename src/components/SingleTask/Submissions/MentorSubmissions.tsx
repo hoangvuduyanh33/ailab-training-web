@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, Spacer } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, Spacer, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import PageLayout from "src/components/common/PageLayout";
 import {
@@ -6,6 +6,7 @@ import {
   TableLayout,
 } from "src/components/common/TableLayouts";
 import { timestampToDate } from "src/components/utils/time";
+import { JudgeModal } from "./JudgeModal";
 
 interface MentorSubmission {
   menteeName: string;
@@ -58,6 +59,14 @@ const exampleSubmisisons: MentorSubmission[] = [
     type: "PDF",
     submittedAt: Date.now(),
   },
+  {
+    menteeId: 10000005,
+    menteeName: "Nguyen Van E",
+    status: "pending",
+    score: -1,
+    type: "PDF",
+    submittedAt: Date.now(),
+  }
 ];
 export const MentorSubmissionsTable = () => {
   const [submissions, setSubmissions] = useState<MentorSubmission[]>([]);
@@ -70,19 +79,19 @@ export const MentorSubmissionsTable = () => {
       setSubmissions(
         newSubmissions[0].status === "judged"
           ? newSubmissions.sort((a, b) => {
-              if (a.status === "pending") return -1;
-              if (b.status === "pending") return 1;
-              if (a.status === "judged") return -1;
-              if (b.status === "judged") return 1;
-              return 0;
-            })
+            if (a.status === "pending") return -1;
+            if (b.status === "pending") return 1;
+            if (a.status === "judged") return -1;
+            if (b.status === "judged") return 1;
+            return 0;
+          })
           : newSubmissions.sort((a, b) => {
-              if (a.status === "judged") return -1;
-              if (b.status === "judged") return 1;
-              if (a.status === "pending") return -1;
-              if (b.status === "pending") return 1;
-              return 0;
-            })
+            if (a.status === "judged") return -1;
+            if (b.status === "judged") return 1;
+            if (a.status === "pending") return -1;
+            if (b.status === "pending") return 1;
+            return 0;
+          })
       );
     }
     if (x === 2) {
@@ -90,25 +99,27 @@ export const MentorSubmissionsTable = () => {
         newSubmissions[0].score <
           newSubmissions[newSubmissions.length - 1].score
           ? newSubmissions.sort((a, b) => {
-              return b.score - a.score;
-            })
+            return b.score - a.score;
+          })
           : newSubmissions.sort((a, b) => {
-              return a.score - b.score;
-            })
+            return a.score - b.score;
+          })
       );
     }
     if (x === 3) {
       setSubmissions(
         newSubmissions[0].type < newSubmissions[newSubmissions.length - 1].type
           ? newSubmissions.sort((a, b) => {
-              return a.type < b.type ? 1 : a.type === b.type ? 0 : -1;
-            })
+            return a.type < b.type ? 1 : a.type === b.type ? 0 : -1;
+          })
           : newSubmissions.sort((a, b) => {
-              return a.type > b.type ? 1 : a.type === b.type ? 0 : -1;
-            })
+            return a.type > b.type ? 1 : a.type === b.type ? 0 : -1;
+          })
       );
     }
   };
+  const { isOpen: isJudgeModalOpen, onClose: onJudgeModalClose, onOpen: onJudgeModalOpen } = useDisclosure();
+  const [selectedId, setSelectedId] = useState(0);
   return (
     <Box width="1200px" borderRadius="16px" bgColor={"gray.700"}>
       <Flex
@@ -146,7 +157,7 @@ export const MentorSubmissionsTable = () => {
           height="100%"
           alignItems={"center"}
         >
-          Id
+          Name
         </Flex>
         <Flex
           width={colWidth[1]}
@@ -204,15 +215,21 @@ export const MentorSubmissionsTable = () => {
               _hover={{ bgColor: "gray.800" }}
               px="50px"
             >
-              <Flex width={colWidth[0]}>{submission.menteeId}</Flex>
+              <Flex width={colWidth[0]}>{submission.menteeName}</Flex>
               <Flex width={colWidth[1]}>{submission.status}</Flex>
-              <Flex width={colWidth[2]}>{submission.score}</Flex>
+              <Flex width={colWidth[2]}>{submission.score === -1 && submission.status === "pending" ?
+                <Button colorScheme={"primary"} onClick={() => { setSelectedId(submission.menteeId); onJudgeModalOpen() }}>Judge</Button> : submission.score
+              }
+              </Flex>
               <Flex width={colWidth[3]}>{submission.type}</Flex>
-              <Flex width={colWidth[4]}>{submission.submittedAt}</Flex>
+              <Flex width={colWidth[4]}>{timestampToDate(submission.submittedAt)}</Flex>
+
             </Flex>
           </>
         );
       })}
+      <JudgeModal isOpen={isJudgeModalOpen} onClose={onJudgeModalClose} menteeId={selectedId} />
+
     </Box>
   );
 };

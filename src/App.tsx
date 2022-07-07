@@ -23,8 +23,8 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />
-            <Route path="" element={<Layout />}>
-              <Route index element={<Summary />} />
+            <Route element={<Layout />}>
+              <Route path="/home" element={<Summary />} />
               <Route path="/courses">
                 <Route index element={<Courses />} />
                 <Route path=":courseid" element={<SingleCourse />} />
@@ -35,6 +35,8 @@ const App: React.FC = () => {
               </Route>
               <Route path="/question" element={<SingleQuestion />} />
               <Route path="/create-course" element={<CreateCourse />} />
+              <Route path="/mentees" element={<></>} />
+              <Route path="/mentors" element={<></>} />
             </Route>
           </Routes>
         </BrowserRouter>

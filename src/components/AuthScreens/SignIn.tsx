@@ -30,7 +30,7 @@ export const SignIn = () => {
     dispatch(setGlobalEmail(email));
     dispatch(setName("Hoang Vu Duy Anh"));
     setTimeout(() => {
-      navigate("/");
+      navigate("/home");
     }, 1000);
   };
 

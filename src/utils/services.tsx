@@ -1,9 +1,9 @@
-export async function fetchRole(username: string) { 
+export async function fetchRole(username: string) {
   if (username.startsWith("1") || username.startsWith("2")) {
     return "mentee"
   }
   if (username.startsWith("admin")) {
-    return "addmin";
+    return "admin";
   }
   return "mentor"
 }

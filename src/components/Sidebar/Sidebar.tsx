@@ -1,7 +1,7 @@
 import { Box, BoxProps, Flex, Image } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { useAppSelector } from "src/app/hooks";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { setEmail, setRole, userSelector } from "src/store/user";
 
 interface SidebarProps {
@@ -31,10 +31,10 @@ const SidebarItem = (props: any) => {
 };
 
 const MenteeSidebarItems = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   return (
     <>
-      <SidebarItem name="Home" href="/" />
+      <SidebarItem name="Home" href="/home" />
       <SidebarItem name="Courses" href="/courses" />
       <SidebarItem name="Tasks" href="tasks" />
       <SidebarItem
@@ -50,26 +50,43 @@ const MenteeSidebarItems = () => {
 };
 
 const MentorSidebarItems = () => {
+  const dispatch = useAppDispatch();
   return (
     <>
-      <SidebarItem name="Home" to={``} />
-      <SidebarItem name="Courses" to={`/courses`} />
-      <SidebarItem name="Tasks" to={`/tasks`} />
-      <SidebarItem name="Mentees" to={`/mentees`} />
-      <SidebarItem name="Log out" />
+      <SidebarItem name="Home" href="/home" />
+      <SidebarItem name="Courses" href="/courses" />
+      <SidebarItem name="Tasks" href="/tasks" />
+      <SidebarItem name="Mentees" href="/mentees" />
+      <SidebarItem
+        name="Log out"
+        href="/sign-in"
+        onClick={() => {
+          dispatch(setRole(""));
+          dispatch(setEmail(""));
+        }}
+      />
     </>
   );
 };
 
 const AdminSidebarItems = () => {
+  const dispatch = useAppDispatch();
   return (
     <>
-      <SidebarItem name="Home" />
-      <SidebarItem name="Mentors" />
-      <SidebarItem name="Mentees" />
-      <SidebarItem name="Courses" />
-      <SidebarItem name="Tasks" />
-      <SidebarItem name="Log out" />
+      <SidebarItem name="Home" href="/home" />
+      <SidebarItem name="Courses" href="/courses" />
+      <SidebarItem name="Tasks" href="/tasks" />
+      <SidebarItem name="Mentees" href="/mentees" />
+      <SidebarItem name="Mentors" href="/mentors" />
+
+      <SidebarItem
+        name="Log out"
+        href="/sign-in"
+        onClick={() => {
+          dispatch(setRole(""));
+          dispatch(setEmail(""));
+        }}
+      />
     </>
   );
 };
