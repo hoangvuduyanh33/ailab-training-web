@@ -14,6 +14,8 @@ import CreateCourse from "./components/Courses/CreateCourse";
 import Tasks from "./components/Tasks";
 import { SignIn } from "./components/AuthScreens/SignIn";
 import { SignUp } from "./components/AuthScreens/SignUp";
+import Mentors from "./components/Mentors";
+import Mentees from "./components/Mentees";
 
 const App: React.FC = () => {
   return (
@@ -35,8 +37,8 @@ const App: React.FC = () => {
               </Route>
               <Route path="/question" element={<SingleQuestion />} />
               <Route path="/create-course" element={<CreateCourse />} />
-              <Route path="/mentees" element={<></>} />
-              <Route path="/mentors" element={<></>} />
+              <Route path="/mentees" element={<Mentees />} />
+              <Route path="/mentors" element={<Mentors />} />
             </Route>
           </Routes>
         </BrowserRouter>

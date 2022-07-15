@@ -14,7 +14,7 @@ export const tasksSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    setTabIndex: (state, action: PayloadAction<number>) => {
+    setTabIndex: (state: any, action: PayloadAction<number>) => {
       state.tabIndex = action.payload;
     },
   },

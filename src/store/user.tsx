@@ -12,13 +12,15 @@ export interface UserState {
   email: string;
   username: string;
   name: string;
+  token: string;
 }
 
 const initialState: UserState = {
-  role: "mentee",
-  email: "test_hoangvuduyanh@gmail.com",
-  username: "hoangvuduyanh",
-  name: "Hoang Vu Duy Anh",
+  role: "",
+  email: "",
+  username: "",
+  name: "",
+  token: "",
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -41,13 +43,13 @@ export const userSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    setRole: (state, action: PayloadAction<string>) => {
+    setRole: (state: any, action: PayloadAction<string>) => {
       state.role = action.payload;
     },
-    setName: (state, action: PayloadAction<string>) => {
+    setName: (state: any, action: PayloadAction<string>) => {
       state.name = action.payload;
     },
-    setEmail: (state, action: PayloadAction<string>) => {
+    setEmail: (state: any, action: PayloadAction<string>) => {
       if (action.payload.endsWith("@vnu.edu.vn")) {
         state.username = action.payload.slice(0, action.payload.length - 11);
       } else {
@@ -55,6 +57,14 @@ export const userSlice = createSlice({
       }
       state.email = action.payload;
     },
+    setUser: (state: any, action: PayloadAction<any>) => {
+      state.role = action.payload.role;
+      state.name = action.payload.name;
+      state.email = action.payload.email;
+      state.username = action.payload.username;
+      state.token = action.payload.token;
+    },
+    syncUser: (state: any, action: PayloadAction<string>) => { }
   },
 });
 

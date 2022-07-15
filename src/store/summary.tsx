@@ -14,7 +14,7 @@ export const summarySlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    setSelectedTag: (state, action: PayloadAction<string>) => {
+    setSelectedTag: (state: any, action: PayloadAction<string>) => {
       state.selectedTag = action.payload;
     },
   },

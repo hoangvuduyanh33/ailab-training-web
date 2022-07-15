@@ -1,14 +1,17 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { Provider } from "react-redux";
-import { store } from "./app/store";
+import { persistor, store } from "./app/store";
 import theme from "./theme";
 import App from "./App";
+import { PersistGate } from "redux-persist/integration/react";
 const AppProvider: React.FC = () => {
   return (
     <Provider store={store}>
-      <ChakraProvider theme={theme}>
-        <App />
-      </ChakraProvider>
+      <PersistGate loading={<></>} persistor={persistor}>
+        <ChakraProvider theme={theme}>
+          <App />
+        </ChakraProvider>
+      </PersistGate>
     </Provider>
   );
 };
