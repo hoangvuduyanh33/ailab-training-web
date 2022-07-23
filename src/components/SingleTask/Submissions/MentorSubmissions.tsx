@@ -1,78 +1,20 @@
 import { Box, Button, Divider, Flex, Spacer, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import PageLayout from "src/components/common/PageLayout";
-import {
-  TableHeadLayout,
-  TableLayout,
-} from "src/components/common/TableLayouts";
+import { InternalLink } from "src/components/common/InternalLink";
 import { timestampToDate } from "src/components/utils/time";
+import { useSubmissions } from "src/hooks/useSubmissions";
 import { JudgeModal } from "./JudgeModal";
 
-interface MentorSubmission {
-  menteeName: string;
-  menteeId: number;
-  status: string; //pending, judged, aborted
-  score: number;
-  type: string; //pdf, link
-  submittedAt: number;
-}
-
 const colWidth = ["20%", "20%", "20%", "20%", "20%"];
-const exampleSubmisisons: MentorSubmission[] = [
-  {
-    menteeId: 10000001,
-    menteeName: "Nguyen Van A",
-    status: "pending",
-    score: 10,
-    type: "PDF",
-    submittedAt: Date.now(),
-  },
-  {
-    menteeId: 10000002,
-    menteeName: "Nguyen Van B",
-    status: "pending",
-    score: 8,
-    type: "PDF",
-    submittedAt: Date.now(),
-  },
-  {
-    menteeId: 10000003,
-    menteeName: "Nguyen Van C",
-    status: "judged",
-    score: 8,
-    type: "Link",
-    submittedAt: Date.now(),
-  },
-  {
-    menteeId: 10000004,
-    menteeName: "Nguyen Van D",
-    status: "aborted",
-    score: 8,
-    type: "Link",
-    submittedAt: Date.now(),
-  },
-  {
-    menteeId: 10000005,
-    menteeName: "Nguyen Van E",
-    status: "pending",
-    score: 8,
-    type: "PDF",
-    submittedAt: Date.now(),
-  },
-  {
-    menteeId: 10000005,
-    menteeName: "Nguyen Van E",
-    status: "pending",
-    score: -1,
-    type: "PDF",
-    submittedAt: Date.now(),
-  }
-];
+
 export const MentorSubmissionsTable = () => {
-  const [submissions, setSubmissions] = useState<MentorSubmission[]>([]);
+  const [submissions, setSubmissions] = useState<any>([]);
+  const [data, loading] = useSubmissions();
+  console.log("loading = ", loading);
+  console.log("submissions = ", submissions);
   useEffect(() => {
-    setSubmissions(exampleSubmisisons);
-  }, []);
+    setSubmissions(data);
+  }, [data]);
   const handleSortBy = (x: number) => {
     const newSubmissions = [...submissions];
     if (x === 1) {
@@ -133,12 +75,11 @@ export const MentorSubmissionsTable = () => {
         _hover={{ bgColor: "gray.800" }}
         px="50px"
       >
-        <Flex fontSize={"30px"}>My Submissions</Flex>
+        <Flex fontSize={"30px"}>Submissions</Flex>
         <Flex fontSize="16px" color={"whiteAlpha.500"} ml={5}>
-          10 Submission
+          {submissions.length} Submissions
         </Flex>
         <Spacer />
-        <Button colorScheme="primary">Submit</Button>
       </Flex>
       <Divider />
       <Flex
@@ -159,7 +100,7 @@ export const MentorSubmissionsTable = () => {
         >
           Name
         </Flex>
-        <Flex
+        {/* <Flex
           width={colWidth[1]}
           _hover={{ color: "primary.200" }}
           onClick={() => {
@@ -169,7 +110,7 @@ export const MentorSubmissionsTable = () => {
           alignItems={"center"}
         >
           Status
-        </Flex>
+        </Flex> */}
         <Flex
           width={colWidth[2]}
           _hover={{ color: "primary.200" }}
@@ -201,7 +142,8 @@ export const MentorSubmissionsTable = () => {
           Submitted At
         </Flex>
       </Flex>
-      {submissions.map((submission) => {
+      {submissions.map((submission: any) => {
+        console.log(submission.score);
         return (
           <>
             <Divider />
@@ -215,14 +157,18 @@ export const MentorSubmissionsTable = () => {
               _hover={{ bgColor: "gray.800" }}
               px="50px"
             >
-              <Flex width={colWidth[0]}>{submission.menteeName}</Flex>
-              <Flex width={colWidth[1]}>{submission.status}</Flex>
-              <Flex width={colWidth[2]}>{submission.score === -1 && submission.status === "pending" ?
-                <Button colorScheme={"primary"} onClick={() => { setSelectedId(submission.menteeId); onJudgeModalOpen() }}>Judge</Button> : submission.score
+
+              <Flex width={colWidth[0]}>
+                <InternalLink href={`/user/${submission.menteeId}`}>
+                  {submission.taskId}
+                </InternalLink>
+              </Flex>
+              <Flex width={colWidth[1]}>{submission.score === -1 ?
+                <Button colorScheme={"primary"} onClick={() => { setSelectedId(submission.menteeId); onJudgeModalOpen() }}>Grading</Button> : submission.score
               }
               </Flex>
-              <Flex width={colWidth[3]}>{submission.type}</Flex>
-              <Flex width={colWidth[4]}>{timestampToDate(submission.submittedAt)}</Flex>
+              <Flex width={colWidth[2]}>{submission.type}</Flex>
+              <Flex width={colWidth[3]}>{timestampToDate(submission.submittedAt)}</Flex>
 
             </Flex>
           </>

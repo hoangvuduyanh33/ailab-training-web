@@ -33,9 +33,9 @@ const App: React.FC = () => {
               </Route>
               <Route path="/tasks">
                 <Route index element={<Tasks />} />
-                <Route path=":taskid" element={<SingleTask />} />
+                <Route path=":taskId" element={<SingleTask />} />
               </Route>
-              <Route path="/question" element={<SingleQuestion />} />
+              <Route path="/question/:questionId" element={<SingleQuestion />} />
               <Route path="/create-course" element={<CreateCourse />} />
               <Route path="/mentees" element={<Mentees />} />
               <Route path="/mentors" element={<Mentors />} />

@@ -3,12 +3,14 @@ import { Box, Flex, Image, Spacer, SimpleGrid } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { setSelectedTag, summarySelector } from "src/store/summary";
 import { userSelector } from "src/store/user";
+import PageLayout from "../common/PageLayout";
 import MenteeCourseTable, {
   exampleMenteeCourses,
 } from "../Courses/CourseTables/MenteeCourseTable";
 import MentorCourseTable, {
   exampleMentorCourses,
 } from "../Courses/CourseTables/MentorCourseTable";
+import AdminDashboard from "./Dashboard/AdminDashboard";
 
 interface TagOverviewProps {
   name: string;
@@ -102,15 +104,19 @@ export default function Summary() {
   };
 
   return (
-    <Box width="calc(100vw-220px)" fontSize="3xl" ml={220} mt={5}>
-      <SummaryHeader />
-      <SummaryTags />
-      {role === "mentee" && (
-        <MenteeCourseTable courses={exampleMenteeCourses} />
-      )}
-      {role === "mentor" && (
-        <MentorCourseTable courses={exampleMentorCourses} />
-      )}
-    </Box>
+    <PageLayout>
+      <Box width="calc(100vw-220px)" fontSize="3xl" ml={220} mt={5}>
+        Overview
+        {role == "admin" && <AdminDashboard />}
+
+        {role === "mentee" && (
+          <MenteeCourseTable courses={exampleMenteeCourses} />
+        )}
+        {role === "mentor" && (
+          <MentorCourseTable courses={exampleMentorCourses} />
+        )}
+      </Box>
+
+    </PageLayout>
   );
 }

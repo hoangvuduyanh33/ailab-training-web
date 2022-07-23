@@ -1,4 +1,3 @@
-import axios from "axios";
 import axiosClient from "./client";
 import { CreateMenteeParams, CreateMentorParams, GetMenteeParams, GetMentorParams, SignInParams, SignUpParams } from "./params";
 
@@ -10,7 +9,7 @@ const authApi = {
 }
 
 const userApi = {
-  getMentee: (params: GetMenteeParams) => axiosClient.get(`/mentee?mentorId=${params.mentorId || ""}&mentorEmail=${params.mentorEmail || ""}&menteeId=${params.menteeId || ""}&menteeEmail=${params.menteeEmail || ""}`),
+  getMentee: (params: GetMenteeParams) => axiosClient.get(`/mentee?mentorId=${params.mentorId || ""}&mentorEmail=${params.mentorEmail || ""}&menteeId=${params.menteeId || ""}&menteeEmail=${params.menteeEmail || ""}&taskId=${params.taskId}`),
   getMentor: (params: GetMentorParams) => axiosClient.get(`/mentor?mentorId=${params.mentorId || ""}&mentorEmail=${params.mentorEmail || ""}&menteeId=${params.menteeId || ""}&menteeEmail=${params.menteeEmail || ""}`),
   getAdmin: (params: any) => axiosClient.get("/admin", params),
   createMentor: (params: CreateMentorParams) => axiosClient.post("/mentor", params),
@@ -19,7 +18,7 @@ const userApi = {
 }
 
 const taskApi = {
-  getTasks: (params: any) => axiosClient.get("/task", params)
+  getTasks: (params: any) => axiosClient.get(`/task?taskId=${params.taskId || ""}&menteeId=${params.menteeId || ""}&mentorId=${params.mentorId || ""}`)
 }
 
 const courseApi = {
@@ -27,15 +26,16 @@ const courseApi = {
   createCourse: (params: any) => axiosClient.post("/course", params)
 }
 
-interface ScoringParams {
-
-}
-
 const submissionApi = {
-  getSubmissions: (params: any) => axiosClient.get("/submission", params),
+  getSubmissions: (params: any) => axiosClient.get(`/submission?taskId=${params.taskId || ""}&mentorId=${params.mentorId || ""}&menteeId=${params.menteeId || ""}&submissionId=${params.submissionId || ""}`),
   submitSubmission: (params: any) => axiosClient.post("/submission", params),
   scoring: (params: any) => axiosClient.post("/submission/scoring", params)
 }
+
+const questionApi = {
+  getQuestions: (params: any) => axiosClient.get(`/question?questionId=${params.questionId || ""}&taskId=${params.taskId || ""}`),
+}
+
 
 
 export {
@@ -43,5 +43,6 @@ export {
   userApi,
   taskApi,
   courseApi,
-  submissionApi
+  submissionApi,
+  questionApi
 };

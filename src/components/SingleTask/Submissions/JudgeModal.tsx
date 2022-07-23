@@ -1,7 +1,10 @@
 import { Button, Input, ModalBody, ModalFooter, ModalHeader, Spacer, Textarea, Flex } from "@chakra-ui/react";
 import { useState } from "react";
+import { useAppSelector } from "src/app/hooks";
 import { InternalLink } from "src/components/common/InternalLink";
 import ModalLayout from "src/components/common/ModalLayout";
+import { submissionApi } from "src/services";
+import { userSelector } from "src/store/user";
 
 interface JudgeModalProps {
 	onClose: any;
@@ -13,6 +16,13 @@ export const JudgeModal = (props: JudgeModalProps) => {
 	const { isOpen, onClose, menteeId } = props;
 	const [score, setScore] = useState("");
 	const [review, setReview] = useState("");
+	const { userId } = useAppSelector(userSelector);
+	const onSubmit = () => {
+		submissionApi.scoring({
+			score: score,
+			review: review,
+		})
+	}
 	return (
 		<ModalLayout isOpen={isOpen} onClose={onClose} minWidth="800px">
 			<ModalHeader>

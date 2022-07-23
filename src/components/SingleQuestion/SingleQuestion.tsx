@@ -1,7 +1,6 @@
-import { Button, Divider, Flex, Image, Spacer } from "@chakra-ui/react";
+import { Button, CircularProgress, Divider, Flex, Image, Spacer } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useQuery } from "src/hooks/useQuery";
-import { fetchSingleQuestion } from "src/services/services";
 import PageLayout from "../common/PageLayout";
 import { timestampToDate } from "../utils/time";
 
@@ -9,6 +8,7 @@ import Markdown from "react-markdown";
 import { useNavigate } from "react-router-dom";
 import MDEditor from "@uiw/react-md-editor";
 import MarkdownPreview from "@uiw/react-markdown-preview";
+import { useQuestion } from "src/hooks/useQuestions";
 
 export interface ReplyProps {
   userName: string;
@@ -89,60 +89,70 @@ const ChatItem = (props: ChatItemProps) => {
 };
 
 const SingleQuestion = () => {
-  const { query } = useQuery();
   const navigate = useNavigate();
-  const id = query.get("id");
-  console.log(id);
-  const [question, setQuestion] = useState<SingleQuestionProps>();
   const [reply, setReply] = useState("");
+  const [data, loading] = useQuestion();
+  const [question, setQuestion] = useState<any>();
+  const [replies, setReplies] = useState<any>([]);
   useEffect(() => {
-    const data = fetchSingleQuestion("", true);
+    console.log("data = ", data)
     if (data) {
-      setQuestion(data);
+      setQuestion(data.question);
+      setReplies(data.replies);
     }
-  }, []);
+  }, [data]);
+
+  if (!loading && !question && !replies) {
+    return <PageLayout>
+      No Data
+    </PageLayout>
+  }
 
   return (
     <PageLayout width="1400px">
-      <Flex flexDir={"column"} fontSize="4xl">
-        <Flex>{question?.name}</Flex>
+      {
+        loading && <Flex>
+          <CircularProgress isIndeterminate />
+        </Flex>
+      }
+      {!loading && question && <Flex flexDir={"column"} fontSize="4xl">
+        <Flex>{question?.title || ""}</Flex>
         <Flex width="full" fontSize={"md"}>
           <Flex
             _hover={{ color: "primary.200" }}
             cursor="pointer"
             mr={2}
             onClick={() => {
-              navigate(`/user?id=${question?.menteeId}`);
+              navigate(`/user/${question?.userId}`);
             }}
           >
-            {question?.menteeName}
+            {question?.userName}
           </Flex>
           <Flex color={"whiteAlpha.500"}>
             asked this question at {timestampToDate(question?.timestamp || 0)}
           </Flex>
         </Flex>
-      </Flex>
+      </Flex>}
       <Divider />
-      {question && (
+      {!loading && question && (
         <ChatItem
-          userName={question?.menteeName}
-          userId={question?.menteeId}
+          userName={question?.userName}
+          userId={question?.userId}
           content={question?.content}
-          timestamp={question?.timestamp}
+          timestamp={question?.createdAt}
         />
       )}
-      {question &&
-        question?.replies.map((reply) => {
-          return (
-            <ChatItem
-              userName={reply.userName}
-              userId={reply.userId}
-              content={reply.content}
-              timestamp={reply.timestamp}
-            />
-          );
-        })}
-      <Flex flexDir="row" maxWidth={"1300px"} mt={5}>
+      {!loading && replies && replies.map((reply: any) => {
+        return (
+          <ChatItem
+            userName={reply.userName}
+            userId={reply.userId}
+            content={reply.content}
+            timestamp={reply.commentedAt}
+          />
+        );
+      })}
+      {!loading && <Flex flexDir="row" maxWidth={"1300px"} mt={5}>
         <Image src="./logo192.png" boxSize={"40px"} mr={5} />
         <Flex flexDir={"column"}>
           <MDEditor
@@ -160,7 +170,7 @@ const SingleQuestion = () => {
             </Button>
           </Flex>
         </Flex>
-      </Flex>
+      </Flex>}
     </PageLayout>
   );
 };

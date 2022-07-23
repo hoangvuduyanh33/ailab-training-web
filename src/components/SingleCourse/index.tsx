@@ -2,7 +2,6 @@ import { useAppSelector } from "src/app/hooks";
 import { userSelector } from "src/store/user";
 import PageLayout from "../common/PageLayout";
 import { TableHeadLayout } from "../common/TableLayouts";
-import { exampleMentorTasks } from "../Tasks/TaskTables/MentorTaskTable";
 import MenteeSingleCourse from "./MenteeSingleCourse";
 import MentorSingleCourse from "./MentorSingleCourse";
 
@@ -17,7 +16,6 @@ const SingleCourse = () => {
       {role === "mentee" && (
         <MentorSingleCourse
           courseName="Sample Course"
-          tasks={exampleMentorTasks}
         />
       )}
     </PageLayout>

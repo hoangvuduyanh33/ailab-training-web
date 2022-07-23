@@ -5,8 +5,8 @@ import { userSelector } from "src/store/user";
 import Sidebar from "../Sidebar/Sidebar";
 
 const Layout = () => {
-  const { username } = useAppSelector(userSelector);
-  if (!username) {
+  const { userId } = useAppSelector(userSelector);
+  if (!userId) {
     return <Navigate to="/sign-in" />
   }
   return (

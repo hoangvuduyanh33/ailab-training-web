@@ -94,6 +94,7 @@ const AddMentorModal = (props: AddMentorModalProps) => {
                 <Input placeholder="Last name" borderRadius={"10px"} ml={3} value={lastName} onChange={(e: any) => { setLastName(e.target.value) }} />
               </Flex>
               <Input placeholder="Email" mt={2} value={email} onChange={(e: any) => { setEmail(e.target.value) }} />
+              <Input placeholder="Password" mt={2} value={email} onChange={(e: any) => { setEmail(e.target.value) }} />
               <Input placeholder="Phone number" mt={2} value={phoneNumber} onChange={(e: any) => { setPhoneNumber(e.target.value) }} />
             </Flex>
           }

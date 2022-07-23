@@ -1,40 +1,31 @@
 import { Divider, Flex, Spacer, useDisclosure } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "src/app/hooks";
 import {
   TableHeadLayout,
   TableHeadRowLayout,
   TableLayout,
 } from "src/components/common/TableLayouts";
 import { timestampToDate } from "src/components/utils/time";
+import { useTasks } from "src/hooks/useTasks";
+import { taskApi } from "src/services";
+import { userSelector } from "src/store/user";
 import AddTaskModal from "./AddTaskModal";
 
-export interface MentorTaskProps {
-  name: string;
-  id?: string;
-  numberAttend: number;
-  numberFinished: number;
-  status: string;
-  avg: number;
-  createdDate?: number;
-}
-
-export interface MentorTaskTableProps {
-  tasks: MentorTaskProps[];
-}
-
+const colWidth = ["30%", "12%", "12%", "12%", "12%", "12%", "10%"];
 export const MentorTaskHeadRow = () => {
   return (
     <TableHeadRowLayout>
-      <Flex paddingLeft={"60px"} width="30%">
+      <Flex paddingLeft={"60px"} width={colWidth[0]}>
         Name
       </Flex>
-      <Flex width={"10%"}>Assigned</Flex>
-      <Flex width={"10%"}>Finished</Flex>
-      <Flex width={"10%"}>Finished rate</Flex>
-      <Flex width={"10%"}>Status</Flex>
-      <Flex width={"10%"}>Avg</Flex>
-      <Flex width={"15%"}>Created Date</Flex>
+      <Flex width={colWidth[1]}>No. Mentees</Flex>
+      <Flex width={colWidth[2]}>Pending</Flex>
+      <Flex width={colWidth[3]}>Finished</Flex>
+      <Flex width={colWidth[4]}>Finished Rate</Flex>
+      <Flex width={colWidth[5]}>Avg</Flex>
+      <Flex width={colWidth[6]}>Tag</Flex>
     </TableHeadRowLayout>
   );
 };
@@ -43,7 +34,7 @@ export const MentorTaskRow = ({
   task,
   ...props
 }: {
-  task: MentorTaskProps;
+  task: any;
   [restProps: string]: any;
 }) => {
   const navigate = useNavigate();
@@ -59,76 +50,39 @@ export const MentorTaskRow = ({
     >
       <Flex
         paddingLeft={"60px"}
-        width="30%"
+        width={colWidth[0]}
         overflow={"hidden"}
         paddingRight="50px"
         cursor={"pointer"}
         _hover={{ color: "primary.200" }}
         onClick={() => {
-          navigate(`${task.id}`);
+          navigate(`${task.taskId}`);
         }}
       >
         {task.name}
       </Flex>
-      <Flex width={"10%"} cursor="pointer" _hover={{ color: "primary.200" }}>
-        {task.numberAttend}
+      <Flex width={colWidth[1]} cursor="pointer" _hover={{ color: "primary.200" }}>
+        {task.numMentees}
       </Flex>
-      <Flex width={"10%"}>{task.numberFinished}</Flex>
-      <Flex width={"10%"}>
-        {((task.numberFinished / task.numberAttend) * 100).toFixed(2)}
+      <Flex width={colWidth[2]}>{task.numPending}</Flex>
+      <Flex width={colWidth[3]} cursor="pointer" _hover={{ color: "primary.200" }}>
+        {task.numFinished}
       </Flex>
-      <Flex width={"10%"}>{task.status}</Flex>
-      <Flex width={"10%"}>{task.avg}</Flex>
-      <Flex width={"15%"}>
-        {task.createdDate ? timestampToDate(task.createdDate) : ""}
+
+      <Flex width={colWidth[4]}>
+        {((task.numFinished / task.numMentees) * 100).toFixed(2)}%
+      </Flex>
+      <Flex width={colWidth[5]}>{task.avgScore}</Flex>
+      <Flex width={colWidth[6]}>
+        {task.tags[0]}
       </Flex>
     </Flex>
   );
 };
-
-export const exampleMentorTasks: MentorTaskProps[] = [
-  {
-    name: "Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 Tasks 1 ",
-    id: "1",
-    numberAttend: 200,
-    numberFinished: 100,
-    status: "Open",
-    avg: 8.9,
-    createdDate: Date.now(),
-  },
-  {
-    name: "Tasks 2",
-    id: "2",
-    numberAttend: 200,
-    numberFinished: 100,
-    status: "Closed",
-    avg: 5.3,
-    createdDate: Date.now(),
-  },
-  {
-    name: "Tasks 3",
-    id: "3",
-    numberAttend: 200,
-    numberFinished: 100,
-    status: "Closed",
-    avg: 8.0,
-    createdDate: Date.now(),
-  },
-  {
-    name: "Tasks 4",
-    id: "4",
-    numberAttend: 200,
-    numberFinished: 100,
-    status: "Closed",
-    avg: 8.0,
-    createdDate: Date.now(),
-  },
-];
-
-const MentorTaskTable = (props: MentorTaskTableProps) => {
-  const { tasks } = props;
-  console.log("tasks = ", tasks);
+const MentorTaskTable = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [tasks, isLoading] = useTasks({})
+  console.log("tasks = ", tasks);
   const TableHead = () => {
     return (
       <>
@@ -159,7 +113,7 @@ const MentorTaskTable = (props: MentorTaskTableProps) => {
       <Divider />
       <MentorTaskHeadRow />
       <Divider />
-      {tasks.map((task: MentorTaskProps) => {
+      {tasks.map((task: any) => {
         return <MentorTaskRow task={task} />;
       })}
     </TableLayout>

@@ -30,7 +30,8 @@ export interface GetMenteeParams {
   mentorId?: string;
   menteeId?: string;
   mentorEmail?: string;
-  menteeEmail?: string
+  menteeEmail?: string;
+  taskId?: string;
 }
 
 

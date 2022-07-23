@@ -7,23 +7,28 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { userApi } from "src/services";
+import { userSelector } from "src/store/user";
 import { InternalLink } from "../common/InternalLink";
 import PageLayout from "../common/PageLayout";
 import { timestampToDate } from "../utils/time";
 import AddMenteeModal from "./AddMenteeModal";
 
-const colWidth = ["20%", "15%", "15%", "15%", "20%"];
+const colWidth = ["20%", "20%", "20%", "20%", "20%"];
 
 const MentorMenteeTable = () => {
   const [mentees, setMentees] = useState([]);
   const [loadingMentees, setLoading] = useState(false);
   const [numSubmit, setNumSubmit] = useState(0);
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const { userId } = useAppSelector(userSelector);
   useEffect(() => {
     setLoading(true);
     try {
+      console.log("userId = ", userId)
       userApi.getMentee({
+        mentorId: userId,
       }).then((data: any) => {
         console.log("data = ", data);
         setMentees(data);
@@ -73,10 +78,10 @@ const MentorMenteeTable = () => {
         px="50px"
       >
         <Flex width={colWidth[0]}>Name</Flex>
-        <Flex width={colWidth[2]}>Email</Flex>
-        <Flex width={colWidth[3]}>Phone number</Flex>
-        <Flex width={colWidth[4]}>Class</Flex>
-        <Flex width={colWidth[5]}>Joined At</Flex>
+        <Flex width={colWidth[1]}>Email</Flex>
+        <Flex width={colWidth[2]}>Phone number</Flex>
+        <Flex width={colWidth[3]}>Class</Flex>
+        <Flex width={colWidth[4]}>Joined At</Flex>
       </Flex>
       {mentees.map((mentee: any) => {
         return (

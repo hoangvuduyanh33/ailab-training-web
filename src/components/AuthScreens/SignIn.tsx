@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -12,7 +13,9 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "src/app/hooks";
-import { setName, setRole, setEmail as setGlobalEmail } from "src/store/user";
+import { useRole } from "src/hooks/useRole";
+import { userApi } from "src/services";
+import { setUser } from "src/store/user";
 import { fetchRole } from "src/utils/services";
 
 export const SignIn = () => {
@@ -22,16 +25,43 @@ export const SignIn = () => {
   const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
+  const [isFetchingUser, setFetchingUser] = useState(false);
   const signIn = () => {
-    fetchRole(email).then((role) => {
-      console.log("role = ", role);
-      dispatch(setRole(role));
-    });
-    dispatch(setGlobalEmail(email));
-    dispatch(setName("Hoang Vu Duy Anh"));
-    setTimeout(() => {
-      navigate("/home");
-    }, 1000);
+    try {
+      if (email.startsWith("admin")) {
+        setTimeout(() => {
+          dispatch(setUser({
+            name: "Admin",
+            role: "admin",
+            userId: "something",
+            email: "admin@vnu.edu.vn"
+          }))
+          navigate("/home");
+        }, 1000);
+        return;
+      }
+      setFetchingUser(true);
+
+      userApi.fetchUserInfo({
+        "userEmail": email
+      }).then((data: any) => {
+        console.log("data = ", data)
+        dispatch(setUser({
+          name: data.firstName + " " + data.lastName,
+          role: data.role,
+          userId: data.userId,
+          email: data.email
+        }))
+        setTimeout(() => {
+          navigate("/home");
+        }, 1000);
+      });
+    } catch (e) {
+      console.log("e = ", e)
+    } finally {
+      setFetchingUser(false);
+    }
   };
 
   return (
@@ -88,8 +118,10 @@ export const SignIn = () => {
               borderRadius="10px"
               width={"100%"}
               onClick={signIn}
+              disabled={isFetchingUser}
             >
-              Sign In
+              {(!isFetchingUser) && "Sign In"}
+              {isFetchingUser && <CircularProgress />}
             </Button>
             <Flex flexDir={"row"} width="100%" mt={2}>
               <Spacer />

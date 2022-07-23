@@ -87,7 +87,7 @@ const AddMenteeModal = (props: AddMenteeModalProps) => {
     >
       <ModalOverlay backdropFilter="blur(3px) !important;" />
       <ModalContent minW={"600px"}>
-        <ModalHeader fontSize={"30px"}>Add mentor</ModalHeader>
+        <ModalHeader fontSize={"30px"}>Add mentee</ModalHeader>
         <ModalBody width={"full"}>
           {
             (status == 0) && <Flex flexDir={"column"}>
@@ -96,6 +96,7 @@ const AddMenteeModal = (props: AddMenteeModalProps) => {
                 <Input placeholder="Last name" borderRadius={"10px"} ml={3} value={lastName} onChange={(e: any) => { setLastName(e.target.value) }} />
               </Flex>
               <Input placeholder="Email" mt={2} value={email} onChange={(e: any) => { setEmail(e.target.value) }} />
+              <Input placeholder="Password" mt={2} value={email} onChange={(e: any) => { setEmail(e.target.value) }} />
               <Input placeholder="Phone number" mt={2} value={phoneNumber} onChange={(e: any) => { setPhoneNumber(e.target.value) }} />
               <Input placeholder="Class" mt={2} value={menteeClass} onChange={(e: any) => { setMenteeClass(e.target.value) }} />
             </Flex>

@@ -19,15 +19,13 @@ import PrimaryButton from "../common/PrimaryButton";
 import { TableHeadLayout, TableLayout } from "../common/TableLayouts";
 import AddTaskModal from "../Tasks/TaskTables/AddTaskModal";
 import {
-  exampleMentorTasks,
   MentorTaskHeadRow,
-  MentorTaskProps,
   MentorTaskRow,
 } from "../Tasks/TaskTables/MentorTaskTable";
 
 interface BrowseTaskModalProps {
   isOpen: boolean;
-  onAddTask: (task: MentorTaskProps) => void;
+  onAddTask: (task: any) => void;
   onClose: any;
 }
 
@@ -44,17 +42,6 @@ const BrowseTaskModal = (props: BrowseTaskModalProps) => {
             <Divider />
             <MentorTaskHeadRow />
             <Divider />
-            {exampleMentorTasks.map((task) => {
-              return (
-                <MentorTaskRow
-                  task={task}
-                  onClick={() => {
-                    onAddTask(task);
-                    onClose();
-                  }}
-                />
-              );
-            })}
           </TableLayout>
         </ModalBody>
       </ModalLayout>
@@ -73,9 +60,9 @@ const CreateCourse = () => {
     onClose: onCloseAddTaskModal,
     onOpen: onOpenAddTaskModal,
   } = useDisclosure();
-  const [tasks, setTasks] = useState<MentorTaskProps[]>([]);
+  const [tasks, setTasks] = useState<any>([]);
 
-  const handleAddTask = (task: MentorTaskProps) => {
+  const handleAddTask = (task: any) => {
     const newTasks = [...tasks, task];
     setTasks(newTasks);
   };
@@ -120,7 +107,7 @@ const CreateCourse = () => {
           </Flex>
         </Flex>
         <MentorTaskHeadRow />
-        {tasks.map((task) => {
+        {tasks.map((task: any) => {
           return <MentorTaskRow task={task} />;
         })}
       </TableLayout>

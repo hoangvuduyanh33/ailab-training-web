@@ -4,7 +4,7 @@ import { time } from "console";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { timestampToDate } from "src/components/utils/time";
-import { fetchQuestions } from "src/services/services";
+import { useQuestions } from "src/hooks/useQuestions";
 
 interface QuestionProps {
   name: string;
@@ -50,7 +50,7 @@ const QuestionRow = (props: QuestionProps) => {
             cursor={"pointer"}
             _hover={{ color: "primary.200" }}
             onClick={() => {
-              navigate(`/question?id=${id}`);
+              navigate(`/question/${id}`);
             }}
           >
             {name}
@@ -81,15 +81,8 @@ const QuestionRow = (props: QuestionProps) => {
 };
 
 const Questions = () => {
-  const [questions, setQuestions] = useState<QuestionProps[]>([]);
-  const [topQuestions, setTopQuestions] = useState<QuestionProps[]>([]);
-
-  useEffect(() => {
-    const data = fetchQuestions("", true);
-    setQuestions(data?.questions || []);
-    setTopQuestions(data?.topQuestions || []);
-  }, []);
-
+  const [questions, loading] = useQuestions();
+  console.log("questions = ", questions);
   const QuestionHead = () => {
     return (
       <Flex
@@ -101,23 +94,23 @@ const Questions = () => {
         height="100px"
         borderTopRadius={"16px"}
       >
-        <Flex ml={8}> {questions.length} Questions </Flex>
+        <Flex ml={8}> {questions?.length || 0} Questions </Flex>
       </Flex>
     );
   };
 
   return (
-    <Box width="1300px">
+    <Box width="1300px" height={"auto"}>
       <QuestionHead />
-      {questions.map((question: QuestionProps) => {
+      {questions.map((question: any) => {
         return (
           <QuestionRow
-            name={question.name}
-            id={question.id}
-            menteeName={question.menteeName}
-            timestamp={question.timestamp}
-            numReply={question.numReply}
-            menteeId={question.menteeId}
+            name={question.title}
+            id={question.questionId}
+            menteeName={question.userName}
+            timestamp={question.createdAt}
+            numReply={question.numReplies}
+            menteeId={question.userId}
           />
         );
       })}

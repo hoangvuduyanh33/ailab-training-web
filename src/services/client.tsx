@@ -1,7 +1,7 @@
 import axios from 'axios';
 import queryString from 'query-string';
 
-const baseUrl = "http://localhost:1234/api/v2"
+export const baseUrl = "http://localhost:1234/api/v2"
 
 const axiosClient = axios.create({
   baseURL: baseUrl,
@@ -23,6 +23,9 @@ axiosClient.interceptors.request.use(async config => {
 axiosClient.interceptors.response.use(response => {
   if (response && response.data && response.data.data) {
     return response.data.data;
+  }
+  if (response && response.data && (response.data.data == null)) {
+    return null;
   }
   if (response && response.data) {
     return response.data;

@@ -2,7 +2,7 @@ import { Box, BoxProps, Flex, Image } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
-import { setEmail, setRole, userSelector } from "src/store/user";
+import { setUser, userSelector } from "src/store/user";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -35,14 +35,16 @@ const MenteeSidebarItems = () => {
   return (
     <>
       <SidebarItem name="Home" href="/home" />
-      <SidebarItem name="Courses" href="/courses" />
       <SidebarItem name="Tasks" href="tasks" />
       <SidebarItem
         name="Log out"
         href="/sign-in"
         onClick={() => {
-          dispatch(setRole(""));
-          dispatch(setEmail(""));
+          dispatch(setUser({
+            userId: "",
+            email: "",
+            token: "",
+          }));
         }}
       />
     </>
@@ -54,15 +56,17 @@ const MentorSidebarItems = () => {
   return (
     <>
       <SidebarItem name="Home" href="/home" />
-      <SidebarItem name="Courses" href="/courses" />
       <SidebarItem name="Tasks" href="/tasks" />
       <SidebarItem name="Mentees" href="/mentees" />
       <SidebarItem
         name="Log out"
         href="/sign-in"
         onClick={() => {
-          dispatch(setRole(""));
-          dispatch(setEmail(""));
+          dispatch(setUser({
+            userId: "",
+            email: "",
+            token: "",
+          }));
         }}
       />
     </>
@@ -74,17 +78,17 @@ const AdminSidebarItems = () => {
   return (
     <>
       <SidebarItem name="Home" href="/home" />
-      <SidebarItem name="Courses" href="/courses" />
-      <SidebarItem name="Tasks" href="/tasks" />
       <SidebarItem name="Mentees" href="/mentees" />
       <SidebarItem name="Mentors" href="/mentors" />
-
       <SidebarItem
         name="Log out"
         href="/sign-in"
         onClick={() => {
-          dispatch(setRole(""));
-          dispatch(setEmail(""));
+          dispatch(setUser({
+            userId: "",
+            email: "",
+            token: "",
+          }));
         }}
       />
     </>

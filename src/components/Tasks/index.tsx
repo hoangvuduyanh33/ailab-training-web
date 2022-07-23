@@ -11,19 +11,16 @@ import {
 } from "@chakra-ui/react";
 import { useAppSelector } from "src/app/hooks";
 import { userSelector } from "src/store/user";
-import MenteeTaskTable, {
-  exampleMenteeTasks,
-} from "./TaskTables/MenteeTaskTable";
+import MenteeTaskTable from "./TaskTables/MenteeTaskTable";
 import MentorTaskTable, {
-  exampleMentorTasks,
 } from "./TaskTables/MentorTaskTable";
 
 const Tasks = () => {
   const { role } = useAppSelector(userSelector);
   return (
     <Box width="calc(100vw-220px)" fontSize="3xl" ml={220} mt={5}>
-      {role === "mentee" && <MentorTaskTable tasks={exampleMentorTasks} />}
-      {role === "mentor" && <MentorTaskTable tasks={exampleMentorTasks} />}
+      {role === "mentee" && <MenteeTaskTable />}
+      {role === "mentor" && <MentorTaskTable />}
     </Box>
   );
 };
