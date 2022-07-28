@@ -10,7 +10,17 @@ export interface UserState {
   username: string;
   userId: string;
   name: string;
+  userClass: string;
   token: string;
+  rating?: number;
+  score?: number;
+  mentorId?: string;
+  mentorName?: string;
+  avgScore?: number;
+  numberOfFinishedTasks?: number;
+  numberOfPendingTasks?: number;
+  numberOfCreatedTasks?: number;
+  numberOfAssignedTasks?: number;
 }
 
 const initialState: UserState = {
@@ -19,7 +29,15 @@ const initialState: UserState = {
   username: "",
   userId: "",
   name: "",
+  userClass: "",
   token: "",
+  rating: 0,
+  score: 0,
+  avgScore: 0,
+  numberOfFinishedTasks: 0,
+  numberOfAssignedTasks: 0,
+  numberOfCreatedTasks: 0,
+  numberOfPendingTasks: 0,
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -32,7 +50,17 @@ export interface UserProps {
   name?: string;
   email?: string
   userId?: string;
+  class?: string;
   token?: string;
+  rating?: string;
+  mentorId?: string;
+  mentorName?: string;
+  score?: number;
+  avgScore?: number;
+  numberOfFinishedTasks?: number;
+  numberOfPendingTasks?: number;
+  numberOfCreatedTasks?: number;
+  numberOfAssignedTasks?: number;
 }
 
 export const userSlice = createSlice({
@@ -49,12 +77,26 @@ export const userSlice = createSlice({
       }
       state.userId = action.payload.userId;
       state.token = action.payload.token;
+      state.userClass = action.payload.class;
+      state.rating = action.payload.rating;
+      state.score = action.payload.score;
+      state.mentorId = action.payload.mentorId;
+      state.mentorName = action.payload.mentorName;
+      state.avgScore = action.payload.avgScore;
+      state.numberOfFinishedTasks = action.payload.numberOfFinishedTasks;
+      state.numberOfPendingTasks = action.payload.numberOfPendingTasks;
+      state.numberOfCreatedTasks = action.payload.numberOfCreatedTasks;
+      state.numberOfAssignedTasks = action.payload.numberOfAssignedTasks;
     },
-    syncUser: (state: any, action: PayloadAction<string>) => { }
+    syncUser: (state: any, action: PayloadAction<string>) => { },
+    setUser2: (state: any, action: PayloadAction<any>) => {
+      state = action.payload;
+    }
   },
+
 });
 
-export const { setUser, syncUser } = userSlice.actions;
+export const { setUser, syncUser, setUser2 } = userSlice.actions;
 export const userSelector = (state: RootState) => state.user;
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

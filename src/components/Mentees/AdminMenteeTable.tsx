@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   Flex,
   Input,
@@ -14,13 +15,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { userApi } from "src/services";
+import { mangageApi, userApi } from "src/services";
 import { InternalLink } from "../common/InternalLink";
 import PageLayout from "../common/PageLayout";
 import { timestampToDate } from "../utils/time";
 import AddMenteeModal from "./AddMenteeModal";
 
-const colWidth = ["20%", "20%", "15%", "15%", "15%", "20%"];
+const colWidth = ["20%", "20%", "20%", "15%", "15%", "20%"];
 
 interface AssignModalProp {
   isOpen: boolean;
@@ -41,6 +42,49 @@ interface ConfirmAssignModalProps {
 }
 const ConfirmAssignModal = (props: ConfirmAssignModalProps) => {
   const { isOpen, onClose, menteeId, mentorId, menteeName, mentorName } = props;
+  const [status, setStatus] = useState(0);
+  const handleManage = () => {
+    setStatus(1);
+    try {
+      mangageApi.assign({
+        mentorId: mentorId,
+        menteeId: menteeId,
+      }).then((response: any) => {
+        console.log("response = ", response)
+        if (response) {
+          setStatus(2);
+        } else {
+          setStatus(3);
+        }
+        setTimeout(
+          () => {
+            setStatus(0);
+            onClose();
+          },
+          2000
+        )
+      }).catch(e => {
+        setStatus(3);
+        setTimeout(
+          () => {
+            setStatus(0);
+            onClose();
+          },
+          2000
+        )
+      })
+    } catch (e) {
+      setStatus(3);
+      setTimeout(
+        () => {
+          setStatus(0);
+          onClose();
+        },
+        2000
+      )
+    }
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -55,12 +99,24 @@ const ConfirmAssignModal = (props: ConfirmAssignModalProps) => {
           Confirm
         </ModalHeader>
         <ModalBody width={"full"}>
-          Assign Mentee {menteeName} to Mentor {mentorName}
+          {(status == 0) && <>Assign Mentee {menteeName} to Mentor {mentorName}</>}
+          {(status == 1) && (status == 1) && <Flex width="100%" flexDir={"column"} alignSelf={"center"}>
+            <CircularProgress isIndeterminate color="primary.200" alignSelf={"center"} />
+          </Flex>}
+          {
+            (status == 2) && <>Assigned successfully</>
+          }
+          {
+            (status == 3) && <>Can not assign mentee {menteeName} to mentor {mentorName}</>
+          }
         </ModalBody>
         <ModalFooter>
           <Flex flexDirection={"row"}>
             <Button width={"100px"} mr={2} onClick={onClose}>Cancel</Button>
-            <Button colorScheme={"primary"} width="100px" onClick={onClose}>Confirm</Button>
+            <Button colorScheme={"primary"} width="100px" onClick={() => {
+              handleManage();
+            }}>
+              Confirm</Button>
           </Flex>
         </ModalFooter>
 
@@ -272,25 +328,23 @@ const AdminMenteeTable = () => {
                   {mentee.firstName + " " + mentee.lastName}
                 </InternalLink>
               </Flex>
-              <Flex width={colWidth[0]}>
+              <Flex width={colWidth[1]}>
                 {mentee.mentorId && <InternalLink href={`/user/${mentee.mentorId}`}>
                   {mentee.mentorName}
                 </InternalLink>}
                 {!mentee.mentorId && <Button colorScheme={"primary"} onClick={() => {
                   setMenteeId(mentee.userId);
                   setMenteeName(mentee.firstName + " " + mentee.lastName);
-                  console.log("menteeId = ", mentee.userId);
-                  console.log("mentee--------- = ", mentee.firstName + " " + mentee.lastName)
                   onAssignOpen();
                 }}>Assign</Button>}
               </Flex>
 
-              <Flex width={colWidth[1]}>{mentee.email}</Flex>
-              <Flex width={colWidth[2]}>{mentee.phoneNumber}</Flex>
-              <Flex width={colWidth[3]}>
+              <Flex width={colWidth[2]}>{mentee.email}</Flex>
+              <Flex width={colWidth[3]}>{mentee.phoneNumber}</Flex>
+              <Flex width={colWidth[4]}>
                 {mentee.class ? mentee.class : "--"}
               </Flex>
-              <Flex width={colWidth[4]}>
+              <Flex width={colWidth[5]}>
                 {mentee.joinedAt ? timestampToDate(mentee.joinedAt) : "--"}
               </Flex>
             </Flex>

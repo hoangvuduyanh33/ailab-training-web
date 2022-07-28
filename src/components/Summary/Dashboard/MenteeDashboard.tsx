@@ -3,6 +3,8 @@ import { Bar, Doughnut, Pie } from "react-chartjs-2";
 
 import { Chart, ArcElement, CategoryScale, LinearScale, BarElement } from 'chart.js';
 import { ChevronDownIcon, ChevronUpIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { useAppSelector } from "src/app/hooks";
+import user, { userSelector } from "src/store/user";
 Chart.register(ArcElement, CategoryScale, LinearScale, BarElement);
 const labels = Array.from(Array(11).keys())
 const x = [1, 1, 1, 5, 10, 13, 20, 25, 20, 10, 2]
@@ -63,17 +65,22 @@ export const data2 = {
   ]
 }
 
-const AdminDashboard = () => {
+const MenteeDashboard = () => {
   console.log("labels2 = ", labels2);
+  const { userId, email, name, userClass } = useAppSelector(userSelector);
+  const props = useAppSelector(userSelector);
+  console.log("userId = ", userId, " email = ", email, " userClass = ", userClass);
+  console.log("props = ", props);
   const Info = ({ name, number, color, percent }: any) => {
     return <Flex flexDir={"column"} width={300} borderBottom="2px solid" borderBottomColor={color} bgColor="gray.700" px={2} py={4}>
       <Flex color={"whiteAlpha.500"}>{name}</Flex>
+
       <Flex fontSize={35} flexDir="row" alignItems={"center"}>
         <Flex>{number}</Flex>
         <Flex flexDir={"row"} fontSize={17} alignItems="center" color={"whiteAlpha.500"}>
           {(color == "red") && <TriangleDownIcon fontSize={15} color={color} ml={2} />}
           {(color == "green") && <TriangleUpIcon fontSize={15} color={color} ml={2} />}
-          {(color != "white") && <Text>{percent}% from last week</Text>}
+          {(color != "white" && percent) && <Text>{percent}% from last week</Text>}
         </Flex>
       </Flex>
     </Flex>
@@ -83,19 +90,19 @@ const AdminDashboard = () => {
       <Flex width={"100%"} height={130} flexDirection={"row"} alignItems={"center"} >
         <Grid templateColumns={'repeat(6,1fr)'} fontSize={20} gap={6}>
           <GridItem colSpan={1}>
-            <Info name="Total mentees" number={100} color="white" />
+            <Info name="Rating" number={props.rating} color="white" />
           </GridItem>
           <GridItem colSpan={1}>
-            <Info name="Total submissions" number={50} color="red" percent={3} />
+            <Info name="Score" number={props.score} color="white" percent={3} />
           </GridItem>
           <GridItem colSpan={1}>
-            <Info name="Average rating" number={1700} color="green" percent={5} />
+            <Info name="Average relative score" number={props.avgScore} color="white" percent={5} />
           </GridItem>
           <GridItem colSpan={1}>
-            <Info name="Total mentors" number={10} color="white" />
+            <Info name="Number of remaining tasks" number={(props.numberOfAssignedTasks || 0) - (props.numberOfFinishedTasks || 0) - (props.numberOfPendingTasks || 0)} color="white" />
           </GridItem>
           <GridItem colSpan={1}>
-            <Info name="New tasks" number={10} color="red" percent={5} />
+            <Info name="Number of finished tasks" number={props.numberOfFinishedTasks} color="white" percent={5} />
           </GridItem>
         </Grid>
       </Flex>
@@ -243,6 +250,10 @@ const AdminDashboard = () => {
   return (
     <Box width={"1600px"}>
       <Grid templateColumns='repeat(4, 1fr)' gap={6}>
+        <GridItem colSpan={1}>
+          <Flex>{name} {userClass}</Flex>
+        </GridItem>
+
         <GridItem colSpan={4} mt={4}>
           <OverallInfo />
         </GridItem>
@@ -270,4 +281,4 @@ const AdminDashboard = () => {
 
 }
 
-export default AdminDashboard;
+export default MenteeDashboard;

@@ -9,6 +9,10 @@ import { useNavigate } from "react-router-dom";
 import MDEditor from "@uiw/react-md-editor";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import { useQuestion } from "src/hooks/useQuestions";
+import { replyApi } from "src/services";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import { userSelector } from "src/store/user";
+import { useAnimationFrame } from "framer-motion";
 
 export interface ReplyProps {
   userName: string;
@@ -31,10 +35,11 @@ export interface ChatItemProps {
   userId: string;
   content: string;
   timestamp: number;
+  isQuestion: boolean;
 }
 
 const ChatItem = (props: ChatItemProps) => {
-  const { userName, userId, content, timestamp } = props;
+  const { userName, userId, content, timestamp, isQuestion } = props;
   const navigate = useNavigate();
   return (
     <Flex flexDir={"row"} width={"full"} mt={5}>
@@ -68,7 +73,7 @@ const ChatItem = (props: ChatItemProps) => {
             {userName}
           </Flex>
           <Flex color={"whiteAlpha.500"}>
-            commented at {timestampToDate(timestamp)}
+            {isQuestion ? "asked a question" : "commented"} at {timestampToDate(timestamp)}
           </Flex>
         </Flex>
         <Flex
@@ -94,13 +99,15 @@ const SingleQuestion = () => {
   const [data, loading] = useQuestion();
   const [question, setQuestion] = useState<any>();
   const [replies, setReplies] = useState<any>([]);
+  const [numSubmit, setNumSubmit] = useState(0);
+  const { userId, name } = useAppSelector(userSelector);
   useEffect(() => {
     console.log("data = ", data)
     if (data) {
       setQuestion(data.question);
       setReplies(data.replies);
     }
-  }, [data]);
+  }, [data, numSubmit]);
 
   if (!loading && !question && !replies) {
     return <PageLayout>
@@ -108,8 +115,19 @@ const SingleQuestion = () => {
     </PageLayout>
   }
 
+  const handleCreateReply = () => {
+    replyApi.createReply({
+      userId: userId,
+      userName: name,
+      questionId: question.questionId,
+      content: reply,
+    }).then((response) => {
+      console.log("response = ", response);
+    })
+  }
+
   return (
-    <PageLayout width="1400px">
+    <PageLayout width="1400px" height="auto">
       {
         loading && <Flex>
           <CircularProgress isIndeterminate />
@@ -140,15 +158,25 @@ const SingleQuestion = () => {
           userId={question?.userId}
           content={question?.content}
           timestamp={question?.createdAt}
+          isQuestion={true}
         />
       )}
-      {!loading && replies && replies.map((reply: any) => {
+      {!loading && replies && replies.sort((a: any, b: any) => {
+        if (a.createdAt > b.createdAt) {
+          return -1
+        }
+        if (a.createdAt < b.createdAt) {
+          return 1
+        }
+        return 0
+      }).map((reply: any) => {
         return (
           <ChatItem
             userName={reply.userName}
             userId={reply.userId}
             content={reply.content}
-            timestamp={reply.commentedAt}
+            timestamp={reply.createdAt}
+            isQuestion={false}
           />
         );
       })}
@@ -165,7 +193,7 @@ const SingleQuestion = () => {
           />
           <Flex flexDirection={"row"}>
             <Spacer />
-            <Button mt={2} colorScheme={"primary"} width="150px">
+            <Button mt={2} colorScheme={"primary"} width="150px" onClick={handleCreateReply}>
               Confirm
             </Button>
           </Flex>

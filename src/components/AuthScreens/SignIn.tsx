@@ -46,12 +46,22 @@ export const SignIn = () => {
       userApi.fetchUserInfo({
         "userEmail": email
       }).then((data: any) => {
-        console.log("data = ", data)
+        console.log("data = ", data);
         dispatch(setUser({
           name: data.firstName + " " + data.lastName,
           role: data.role,
           userId: data.userId,
-          email: data.email
+          email: data.email,
+          class: data.class,
+          numberOfAssignedTasks: data.numAssignedTasks,
+          numberOfCreatedTasks: data.numberOfCreatedTasks,
+          numberOfFinishedTasks: data.numFinishedTasks,
+          numberOfPendingTasks: data.numPendingTasks,
+          rating: data.rating,
+          score: data.score,
+          mentorId: data.mentorId,
+          mentorName: data.mentorName,
+          avgScore: data.avgScore,
         }))
         setTimeout(() => {
           navigate("/home");

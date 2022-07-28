@@ -11,6 +11,7 @@ import MentorCourseTable, {
   exampleMentorCourses,
 } from "../Courses/CourseTables/MentorCourseTable";
 import AdminDashboard from "./Dashboard/AdminDashboard";
+import MenteeDashboard from "./Dashboard/MenteeDashboard";
 
 interface TagOverviewProps {
   name: string;
@@ -105,18 +106,15 @@ export default function Summary() {
 
   return (
     <PageLayout>
-      <Box width="calc(100vw-220px)" fontSize="3xl" ml={220} mt={5}>
-        Overview
-        {role == "admin" && <AdminDashboard />}
+      {role === "admin" && "Overview"}
+      {role === "admin" && <AdminDashboard />}
 
-        {role === "mentee" && (
-          <MenteeCourseTable courses={exampleMenteeCourses} />
-        )}
-        {role === "mentor" && (
-          <MentorCourseTable courses={exampleMentorCourses} />
-        )}
-      </Box>
-
+      {role === "mentee" && (
+        <MenteeDashboard />
+      )}
+      {role === "mentor" && (
+        <MentorCourseTable courses={exampleMentorCourses} />
+      )}
     </PageLayout>
   );
 }
