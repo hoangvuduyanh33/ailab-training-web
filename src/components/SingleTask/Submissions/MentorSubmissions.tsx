@@ -13,7 +13,14 @@ export const MentorSubmissionsTable = () => {
   console.log("loading = ", loading);
   console.log("submissions = ", submissions);
   useEffect(() => {
-    setSubmissions(data);
+    setSubmissions(data.sort(
+      (a: any, b: any) => {
+        if (a.submittedAt > b.submittedAt) {
+          return -1;
+        }
+        return (a.submittedAt == b.submittedAt) ? 0 : 1;
+      }
+    ));
   }, [data]);
   const handleSortBy = (x: number) => {
     const newSubmissions = [...submissions];
@@ -61,7 +68,8 @@ export const MentorSubmissionsTable = () => {
     }
   };
   const { isOpen: isJudgeModalOpen, onClose: onJudgeModalClose, onOpen: onJudgeModalOpen } = useDisclosure();
-  const [selectedId, setSelectedId] = useState(0);
+  const [selectedId, setSelectedId] = useState("");
+  const [type, setType] = useState("");
   return (
     <Box width="1200px" borderRadius="16px" bgColor={"gray.700"}>
       <Flex
@@ -160,11 +168,15 @@ export const MentorSubmissionsTable = () => {
 
               <Flex width={colWidth[0]}>
                 <InternalLink href={`/user/${submission.menteeId}`}>
-                  {submission.taskId}
+                  {submission.menteeName}
                 </InternalLink>
               </Flex>
               <Flex width={colWidth[1]}>{submission.score === -1 ?
-                <Button colorScheme={"primary"} onClick={() => { setSelectedId(submission.menteeId); onJudgeModalOpen() }}>Grading</Button> : submission.score
+                <Button colorScheme={"primary"} onClick={() => {
+                  setSelectedId(submission.submissionId);
+                  onJudgeModalOpen()
+                  setType(submission.type)
+                }}>Grading</Button> : submission.score
               }
               </Flex>
               <Flex width={colWidth[2]}>{submission.type}</Flex>
@@ -174,7 +186,7 @@ export const MentorSubmissionsTable = () => {
           </>
         );
       })}
-      <JudgeModal isOpen={isJudgeModalOpen} onClose={onJudgeModalClose} menteeId={selectedId} />
+      <JudgeModal isOpen={isJudgeModalOpen} onClose={onJudgeModalClose} submissionId={selectedId} type={type} />
 
     </Box>
   );

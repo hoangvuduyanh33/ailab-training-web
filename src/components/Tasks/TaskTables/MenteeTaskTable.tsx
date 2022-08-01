@@ -69,7 +69,7 @@ export const MentorTaskRow = ({
       </Flex>
       <Flex width={colWidth[5]}>{task.avgScore}</Flex>
       <Flex width={colWidth[6]}>
-        {task.tags[0]}
+        {(task.tags && task.tags.length > 0) ? task.tags[0] : ""}
       </Flex>
     </Flex>
   );
@@ -83,22 +83,8 @@ const MenteeTaskTable = () => {
     return (
       <>
         <TableHeadLayout tableName={"Tasks"} sideText={`${tasks.length} tasks`}>
-          <Flex
-            bgColor={"primary.400"}
-            mr="50px"
-            padding="10px"
-            borderRadius={"15px"}
-            cursor="pointer"
-            transition={"0.5s"}
-            _hover={{
-              bgColor: "primary.200",
-            }}
-            onClick={onOpen}
-          >
-            Add task
-          </Flex>
+          <></>
         </TableHeadLayout>
-        <AddTaskModal onClose={onClose} isOpen={isOpen} />
       </>
     );
   };

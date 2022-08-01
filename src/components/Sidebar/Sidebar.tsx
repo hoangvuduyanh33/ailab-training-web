@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { setUser, userSelector } from "src/store/user";
+import UETLogo from "src/assets/uet-logo.jpg"
 
 interface SidebarProps {
   isOpen: boolean;
@@ -123,7 +124,7 @@ const Sidebar = (props: SidebarProps & BoxProps) => {
         cursor="pointer"
         mb={2}
       >
-        <Image src="./uet-logo.jpg" boxSize={8} borderRadius="full" />
+        <Image src={UETLogo} boxSize={8} borderRadius="full" />
         <Flex ml={2}>Ailab Training</Flex>
       </Flex>
       {role === "mentee" && <MenteeSidebarItems />}

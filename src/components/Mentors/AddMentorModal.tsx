@@ -28,7 +28,7 @@ const AddMentorModal = (props: AddMentorModalProps) => {
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [status, setStatus] = useState(0);
-
+  const [password, setPassword] = useState("");
   const handleCreateMentor = () => {
     setStatus(1);
     try {
@@ -94,7 +94,7 @@ const AddMentorModal = (props: AddMentorModalProps) => {
                 <Input placeholder="Last name" borderRadius={"10px"} ml={3} value={lastName} onChange={(e: any) => { setLastName(e.target.value) }} />
               </Flex>
               <Input placeholder="Email" mt={2} value={email} onChange={(e: any) => { setEmail(e.target.value) }} />
-              <Input placeholder="Password" mt={2} value={email} onChange={(e: any) => { setEmail(e.target.value) }} />
+              <Input placeholder="Password" type={"password"} mt={2} value={password} onChange={(e: any) => { setPassword(e.target.value) }} />
               <Input placeholder="Phone number" mt={2} value={phoneNumber} onChange={(e: any) => { setPhoneNumber(e.target.value) }} />
             </Flex>
           }
@@ -107,7 +107,7 @@ const AddMentorModal = (props: AddMentorModalProps) => {
             (status == 2) && <Text>Created account for mentor {firstName} {lastName} success </Text>
           }
           {
-            (status == 3) && <Text>Email {email} already used </Text>
+            (status == 3) && <Text>Created account for mentor {firstName} {lastName} success </Text>
           }
         </ModalBody>
         <ModalFooter>

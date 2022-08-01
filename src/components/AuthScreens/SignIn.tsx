@@ -10,7 +10,7 @@ import {
   Input,
   Spacer,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "src/app/hooks";
 import { useRole } from "src/hooks/useRole";
@@ -25,9 +25,12 @@ export const SignIn = () => {
   const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [loading, setLoading] = useState(false);
   const [isFetchingUser, setFetchingUser] = useState(false);
+  console.log("isFetching = ", isFetchingUser);
   const signIn = () => {
+    setFetchingUser(true);
+    console.log("set");
+    setTimeout(() => { }, 1000)
     try {
       if (email.startsWith("admin")) {
         setTimeout(() => {
@@ -41,7 +44,6 @@ export const SignIn = () => {
         }, 1000);
         return;
       }
-      setFetchingUser(true);
 
       userApi.fetchUserInfo({
         "userEmail": email
@@ -73,7 +75,9 @@ export const SignIn = () => {
       setFetchingUser(false);
     }
   };
-
+  useEffect(() => {
+    console.log("isFetching = ", isFetchingUser);
+  }, [isFetchingUser])
   return (
     <Box
       width="2000px"
@@ -128,24 +132,10 @@ export const SignIn = () => {
               borderRadius="10px"
               width={"100%"}
               onClick={signIn}
-              disabled={isFetchingUser}
+              isLoading={isFetchingUser}
             >
-              {(!isFetchingUser) && "Sign In"}
-              {isFetchingUser && <CircularProgress />}
+              Sign In
             </Button>
-            <Flex flexDir={"row"} width="100%" mt={2}>
-              <Spacer />
-              <Flex
-                fontSize={"md"}
-                _hover={{ color: "primary.200" }}
-                cursor="pointer"
-                onClick={() => {
-                  navigate("/sign-up");
-                }}
-              >
-                Register now
-              </Flex>
-            </Flex>
           </Flex>
         </FormControl>
       </Flex>

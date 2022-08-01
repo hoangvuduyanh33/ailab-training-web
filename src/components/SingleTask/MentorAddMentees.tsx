@@ -10,14 +10,16 @@ import {
   Select,
   Spacer,
   useDisclosure,
+  useRadio,
 
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { InternalLink } from "src/components/common/InternalLink";
 import { timestampToDate } from "src/components/utils/time";
 import { useMentees } from "src/hooks/useMentees";
-import { userApi } from "src/services";
+import { taskApi, userApi } from "src/services";
 import { userSelector } from "src/store/user";
 import ModalLayout from "../common/ModalLayout";
 
@@ -27,12 +29,71 @@ interface MentorAssignTaskModalProps {
   isOpen: boolean;
   onClose: any;
   mentorId: string;
+  assignedMentees: [];
 }
 
+
 const MentorAssignTaskModal = (props: any) => {
-  const { isOpen, onClose, mentorId } = props;
+  const { isOpen, onClose, mentorId, assignedMentees } = props;
   const [mentees, loading] = useMentees();
-  const [type, setType] = useState("link");
+  const { userId } = useAppSelector(userSelector);
+  const [unassignedMentees, setUnassignedMentees] = useState([]);
+  const { taskId } = useParams();
+  console.log("mentees = ", mentees, "assignedMentees = ", assignedMentees);
+  useEffect(() => {
+    console.log("mentees = ", mentees, "assignedMentees = ", assignedMentees)
+    setUnassignedMentees(mentees.filter((t: any) => {
+      if (!assignedMentees) {
+        return true
+      }
+      console.log("assignedMentees = ", assignedMentees);
+      for (let i = 0; i < assignedMentees.length; i++) {
+        if (assignedMentees[i].userId == t.userId) {
+          return false;
+        }
+      }
+      return true;
+    }))
+  }, [assignedMentees, mentees])
+  const { isOpen: isConfirmOpen, onClose: onConfirmClose, onOpen: onConfirmOpen } = useDisclosure();
+  const [menteeName, setMenteeName] = useState("");
+  const [menteeId, setMenteeId] = useState("");
+  const [status, setStatus] = useState(0);
+  const ConfirmModal = ({ isOpen, onClose, menteeName }: { isOpen: boolean; onClose: any; menteeName: string }) => {
+    return (
+      <ModalLayout isOpen={isOpen} onClose={onClose} minWidth="550px">
+        <ModalHeader fontSize={"30px"}>
+          Confirm
+        </ModalHeader>
+        <ModalBody>
+          {(status == 0 || status == 1) && `Confirm assign task to ${menteeName}`}
+          {(status == 2) && `Assign task success`}
+        </ModalBody>
+        <ModalFooter>
+          <Flex flexDir={"row"}>
+            <Button onClick={onClose} ml={2}>Cancel</Button>
+            <Button colorScheme="primary"
+              isLoading={(status == 1)}
+              onClick={() => {
+                setStatus(1);
+                taskApi.assignTask({
+                  mentorId: userId,
+                  menteeId: menteeId,
+                  taskId: taskId,
+                }).finally(() => {
+                  setStatus(2);
+                  setTimeout(() => {
+                    setStatus(0)
+                  }, 2000)
+                  onClose();
+                })
+              }}>Confirm</Button>
+          </Flex>
+        </ModalFooter>
+      </ModalLayout >
+    )
+  }
+
   return (
     <ModalLayout isOpen={isOpen} onClose={onClose} minWidth="1350px">
       <ModalHeader fontSize={"30px"}>
@@ -53,7 +114,7 @@ const MentorAssignTaskModal = (props: any) => {
           >
             <Flex fontSize={"30px"}>Mentees</Flex>
             <Flex fontSize="16px" color={"whiteAlpha.500"} ml={5}>
-              {mentees.length - mentees.length / 2} Mentees
+              {unassignedMentees.length} Mentees
             </Flex>
             <Spacer />
           </Flex>
@@ -74,7 +135,7 @@ const MentorAssignTaskModal = (props: any) => {
             <Flex width={colWidth[3]}>Class</Flex>
             <Flex width={colWidth[4]}>Joined At</Flex>
           </Flex>
-          {mentees.slice(2, 4).map((mentee: any) => {
+          {unassignedMentees.map((mentee: any) => {
             return (
               <>
                 <Divider />
@@ -87,6 +148,12 @@ const MentorAssignTaskModal = (props: any) => {
                   fontSize="md"
                   _hover={{ bgColor: "gray.800" }}
                   px="50px"
+                  onClick={() => {
+                    setMenteeName(mentee.firstName + " " + mentee.lastName);
+                    setMenteeId(mentee.userId);
+                    onConfirmOpen();
+                  }}
+                  cursor="pointer"
                 >
                   <Flex width={colWidth[0]}>
                     <InternalLink href={`/user/${mentee.userId}`}>
@@ -100,12 +167,13 @@ const MentorAssignTaskModal = (props: any) => {
                     {mentee.class ? mentee.class : "--"}
                   </Flex>
                   <Flex width={colWidth[4]}>
-                    {mentee.joinedAt ? timestampToDate(mentee.joinedAt) : "--"}
+                    {mentee.createdAt ? timestampToDate(mentee.createdAt) : "--"}
                   </Flex>
                 </Flex>
               </>
             );
           })}
+          <ConfirmModal isOpen={isConfirmOpen} onClose={onConfirmClose} menteeName={menteeName} />
         </Box>
 
       </ModalBody>
@@ -121,15 +189,17 @@ const MentorAddMentees = () => {
   const [numSubmit, setNumSubmit] = useState(0);
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { userId } = useAppSelector(userSelector);
+  const { taskId } = useParams();
   useEffect(() => {
     setLoading(true);
     try {
       console.log("userId = ", userId)
       userApi.getMentee({
         mentorId: userId,
+        taskId: taskId,
       }).then((data: any) => {
         console.log("data = ", data);
-        setMentees(data);
+        setMentees(data || []);
       });
     } catch (e) {
       console.log("e = ", e);
@@ -159,11 +229,11 @@ const MentorAddMentees = () => {
       >
         <Flex fontSize={"30px"}>Mentees</Flex>
         <Flex fontSize="16px" color={"whiteAlpha.500"} ml={5}>
-          {mentees.length / 2} Mentees
+          {mentees.length} Mentees
         </Flex>
         <Spacer />
         <Button colorScheme={"primary"} width="100px" onClick={onOpen}>Add mentee</Button>
-        <MentorAssignTaskModal isOpen={isOpen} onClose={onClose} mentorId={userId} />
+        <MentorAssignTaskModal isOpen={isOpen} onClose={onClose} mentorId={userId} assignedMentees={mentees || []} />
       </Flex>
       <Divider />
       <Flex
@@ -182,7 +252,7 @@ const MentorAddMentees = () => {
         <Flex width={colWidth[3]}>Class</Flex>
         <Flex width={colWidth[4]}>Joined At</Flex>
       </Flex>
-      {mentees.slice(0, 2).map((mentee: any) => {
+      {mentees.map((mentee: any) => {
         return (
           <>
             <Divider />
@@ -208,7 +278,7 @@ const MentorAddMentees = () => {
                 {mentee.class ? mentee.class : "--"}
               </Flex>
               <Flex width={colWidth[4]}>
-                {mentee.joinedAt ? timestampToDate(mentee.joinedAt) : "--"}
+                {mentee.createdAt ? timestampToDate(mentee.createdAt) : "--"}
               </Flex>
             </Flex>
           </>

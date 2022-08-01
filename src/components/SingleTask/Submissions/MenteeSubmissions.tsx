@@ -1,4 +1,6 @@
 import { Box, Button, Divider, Flex, Spacer, useDisclosure } from "@chakra-ui/react";
+import axios from "axios";
+import { useState } from "react";
 import { useAppSelector } from "src/app/hooks";
 import PageLayout from "src/components/common/PageLayout";
 import {
@@ -7,6 +9,7 @@ import {
 } from "src/components/common/TableLayouts";
 import { timestampToDate } from "src/components/utils/time";
 import { useSubmission, useSubmissions } from "src/hooks/useSubmissions";
+import { submissionApi } from "src/services";
 import { userSelector } from "src/store/user";
 import { SubmitModal } from "./SubmitModal";
 
@@ -24,6 +27,8 @@ export const MenteeSubmissionsTable = () => {
   const { userId } = useAppSelector(userSelector);
   const { isOpen, onOpen, onClose } = useDisclosure();
   console.log("submissions = ", submissions);
+  const [status, setStatus] = useState(0);
+
   return (
     <Box width="1200px" borderRadius="16px" bgColor={"gray.700"}>
       <Flex

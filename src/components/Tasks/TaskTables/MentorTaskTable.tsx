@@ -74,7 +74,7 @@ export const MentorTaskRow = ({
       </Flex>
       <Flex width={colWidth[5]}>{task.avgScore}</Flex>
       <Flex width={colWidth[6]}>
-        {task.tags[0]}
+        {(task.tags && task.tags.length > 0) ? task.tags[0] : ""}
       </Flex>
     </Flex>
   );

@@ -1,12 +1,15 @@
 
 import { DownloadIcon } from "@chakra-ui/icons";
-import { Button, Input, ModalBody, ModalFooter, ModalHeader, Spacer, Textarea, Flex, Select, Text } from "@chakra-ui/react";
+import { Button, Input, ModalBody, ModalFooter, ModalHeader, Spacer, Textarea, Flex, Select, Text, CircularProgress } from "@chakra-ui/react";
+import axios from "axios";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { useParams } from "react-router-dom";
 import { useAppSelector } from "src/app/hooks";
 import { InternalLink } from "src/components/common/InternalLink";
 import ModalLayout from "src/components/common/ModalLayout";
 import { submissionApi } from "src/services";
+import { baseUrl } from "src/services/client";
 import { userSelector } from "src/store/user";
 import { fileURLToPath } from "url";
 
@@ -19,16 +22,65 @@ interface SubmitModalProp {
 
 export const SubmitModal = (props: SubmitModalProp) => {
   const { isOpen, onClose, menteeId } = props;
-  const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject, acceptedFiles } = useDropzone();
+  const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject, acceptedFiles } = useDropzone({
+    accept: {
+      "application/pdf": [".pdf"],
+    }
+  });
   console.log(acceptedFiles.length);
-  const [score, setScore] = useState("");
-  const [review, setReview] = useState("");
   const [type, setType] = useState("link");
-  const onSubmit = () => {
-    submissionApi.scoring({
-      score: score,
-      review: review,
-    })
+  const [link, setLink] = useState("");
+  const [status, setStatus] = useState(0);
+  const { taskId } = useParams();
+  const handleSubmit = () => {
+    setStatus(1);
+    try {
+      var formData = new FormData();
+      formData.append("file", acceptedFiles[0])
+      formData.append("link", (type == "link") ? link : "")
+      formData.append("fileName", (type == "link") ? "" : acceptedFiles[0].name);
+      formData.append("menteeId", menteeId);
+      formData.append("taskId", taskId || "");
+      formData.append("type", type);
+      axios.post(baseUrl + "/submission", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }).then((response: any) => {
+        console.log("response = ", response)
+        if (response) {
+          setStatus(2);
+        } else {
+          setStatus(3);
+        }
+        setTimeout(
+          () => {
+            setStatus(0);
+            onClose();
+          },
+          2000
+        )
+      }).catch(e => {
+        setStatus(3);
+        setTimeout(
+          () => {
+            setStatus(0);
+            onClose();
+          },
+          2000
+        )
+      })
+    } catch (e) {
+      setStatus(3);
+      setTimeout(
+        () => {
+          setStatus(0);
+          onClose();
+        },
+        2000
+      )
+    }
+
   }
   console.log("acceptedFiles = ", acceptedFiles)
   return (
@@ -44,11 +96,11 @@ export const SubmitModal = (props: SubmitModalProp) => {
           setType(event.target.value);
         }}>
           <option value={"link"}>Link</option>
-          <option value={"file"}>PDF file</option>
+          <option value={"pdf"}>PDF file</option>
         </Select>
 
-        {(type == "link") && <Input placeholder="Link" mt={4} borderRadius={"5px"} value={score} onChange={(event: any) => { setScore(event.target.value) }} />}
-        {(type == "file") &&
+        {(type == "link") && <Input placeholder="Link" mt={4} borderRadius={"5px"} value={link} onChange={(event: any) => { setLink(event.target.value) }} />}
+        {(type == "pdf") &&
           acceptedFiles.length === 0 && <Flex width={"100%"} flexDirection="column" alignItems={"center"} bgColor="#0f0f0f" py={4} borderRadius="6px" mt={3}
             _hover={{
               outline: "1px solid #47B5FF"
@@ -62,7 +114,7 @@ export const SubmitModal = (props: SubmitModalProp) => {
             </Flex>
           </Flex>
         }
-        {(type == "file") &&
+        {(type == "pdf") &&
           acceptedFiles.length > 0 && <Flex width={"100%"} flexDirection="column" py={4} borderRadius="6px" mt={3}
             _hover={{
               outline: "1px solid #47B5FF"
@@ -92,7 +144,9 @@ export const SubmitModal = (props: SubmitModalProp) => {
       <ModalFooter>
         <Flex flexDir={"row"}>
           <Spacer />
-          <Button colorScheme="primary" onClick={onClose}>Submit</Button>
+          <Button colorScheme="primary" onClick={handleSubmit} isLoading={(status == 1)}>
+            {"Submit"}
+          </Button>
         </Flex>
       </ModalFooter>
     </ModalLayout >

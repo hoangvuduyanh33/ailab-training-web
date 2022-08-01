@@ -10,10 +10,10 @@ import { useEffect, useState } from "react";
 import { userApi } from "src/services";
 import { InternalLink } from "../common/InternalLink";
 import PageLayout from "../common/PageLayout";
-import { timestampToDate } from "../utils/time";
+import { orderByCreatedAt, timestampToDate } from "../utils/time";
 import AddMentorModal from "./AddMentorModal";
 
-const colWidth = ["40%", "25%", "20%", "15%", "20%"];
+const colWidth = ["30%", "25%", "20%", "15%", "20%"];
 
 const Mentors = () => {
   const [mentors, setMentors] = useState([]);
@@ -33,7 +33,7 @@ const Mentors = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [numSubmit]);
   const increaseSubmit = () => {
     setNumSubmit(numSubmit + 1);
   }
@@ -42,7 +42,7 @@ const Mentors = () => {
   }
   return (
     <PageLayout>
-      <Box width="1200px" borderRadius="16px" bgColor={"gray.700"}>
+      <Box width="1300px" borderRadius="16px" bgColor={"gray.700"}>
         <Flex
           flexDir="row"
           alignSelf={"center"}
@@ -80,7 +80,7 @@ const Mentors = () => {
           <Flex width={colWidth[2]}>Phone number</Flex>
           <Flex width={colWidth[3]}>Joined At</Flex>
         </Flex>
-        {mentors.map((mentor: any) => {
+        {mentors.sort(orderByCreatedAt).map((mentor: any) => {
           return (
             <>
               <Divider />
@@ -102,7 +102,7 @@ const Mentors = () => {
                 <Flex width={colWidth[1]}>{mentor.email}</Flex>
                 <Flex width={colWidth[2]}>{mentor.phoneNumber}</Flex>
                 <Flex width={colWidth[3]}>
-                  {mentor.joinedAt ? timestampToDate(mentor.joinedAt) : "--"}
+                  {mentor.createdAt ? timestampToDate(mentor.createdAt) : "--"}
                 </Flex>
               </Flex>
             </>

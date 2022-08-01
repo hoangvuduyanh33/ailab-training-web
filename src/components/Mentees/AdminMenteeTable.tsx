@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import { mangageApi, userApi } from "src/services";
 import { InternalLink } from "../common/InternalLink";
 import PageLayout from "../common/PageLayout";
-import { timestampToDate } from "../utils/time";
+import { orderByCreatedAt, timestampToDate } from "../utils/time";
 import AddMenteeModal from "./AddMenteeModal";
 
 const colWidth = ["20%", "20%", "20%", "15%", "15%", "20%"];
@@ -194,7 +194,7 @@ const AssignModal = (props: AssignModalProp) => {
               <Flex width={colWidthModal[3]}>Phone number</Flex>
               <Flex width={colWidthModal[4]}>Joined At</Flex>
             </Flex>
-            {mentors.map((mentor: any) => {
+            {mentors.sort(orderByCreatedAt).map((mentor: any) => {
               return (
                 <>
                   <Divider />
@@ -223,7 +223,7 @@ const AssignModal = (props: AssignModalProp) => {
                     <Flex width={colWidthModal[2]}>{mentor.email}</Flex>
                     <Flex width={colWidthModal[3]}>{mentor.phoneNumber}</Flex>
                     <Flex width={colWidthModal[4]}>
-                      {mentor.joinedAt ? timestampToDate(mentor.joinedAt) : "--"}
+                      {mentor.createdAt ? timestampToDate(mentor.createdAt) : "--"}
                     </Flex>
                   </Flex>
                 </>
@@ -309,7 +309,7 @@ const AdminMenteeTable = () => {
       </Flex>
       <AddMenteeModal isOpen={isOpen} onClose={() => { increaseSubmit(); onClose(); }} />
 
-      {mentees.map((mentee: any) => {
+      {mentees.sort(orderByCreatedAt).map((mentee: any) => {
         return (
           <>
             <Divider />
@@ -345,7 +345,7 @@ const AdminMenteeTable = () => {
                 {mentee.class ? mentee.class : "--"}
               </Flex>
               <Flex width={colWidth[5]}>
-                {mentee.joinedAt ? timestampToDate(mentee.joinedAt) : "--"}
+                {mentee.createdAt ? timestampToDate(mentee.createdAt) : "--"}
               </Flex>
             </Flex>
           </>

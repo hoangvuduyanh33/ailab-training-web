@@ -1,33 +1,68 @@
 import { Button, Input, ModalBody, ModalFooter, ModalHeader, Spacer, Textarea, Flex } from "@chakra-ui/react";
+import { Stats } from "fs";
 import { useState } from "react";
 import { useAppSelector } from "src/app/hooks";
 import { InternalLink } from "src/components/common/InternalLink";
 import ModalLayout from "src/components/common/ModalLayout";
 import { submissionApi } from "src/services";
+import { baseUrl } from "src/services/client";
 import { userSelector } from "src/store/user";
 
 interface JudgeModalProps {
 	onClose: any;
 	isOpen: boolean;
-	menteeId: number;
+	submissionId: string;
+	type: string;
 }
 
 export const JudgeModal = (props: JudgeModalProps) => {
-	const { isOpen, onClose, menteeId } = props;
+	const { isOpen, onClose, submissionId, type } = props;
 	const [score, setScore] = useState("");
 	const [review, setReview] = useState("");
 	const { userId } = useAppSelector(userSelector);
+	console.log("score = ", score, " review = ", review, " submissionId = ", submissionId, " mentorId = ", userId);
+	const [status, setStatus] = useState(0);
 	const onSubmit = () => {
+		setStatus(1);
 		submissionApi.scoring({
-			score: score,
+			submissionId: submissionId,
+			mentorId: userId,
+			score: +score,
 			review: review,
+		}).then((data) => {
+			console.log(data);
+			onClose();
+
+		}).catch((e) => {
+			console.log("e = ", e);
+		}).finally(() => {
+			console.log("something")
+			onClose();
+			setStatus(0);
 		})
 	}
+
+	const onDownload = () => {
+		fetch(`${baseUrl}/files/real?submissionId=${submissionId}`).then(response => {
+			response.blob().then(blob => {
+				let url = window.URL.createObjectURL(blob);
+				let a = document.createElement('a');
+				a.href = url;
+				a.download = `${submissionId}.pdf`;
+				a.click();
+			})
+		})
+	}
+
+	const openInNewTab = () => {
+		window.open("https://www.overleaf.com/read/fzjknsdtsqfr", "_blank")
+	}
+
 	return (
 		<ModalLayout isOpen={isOpen} onClose={onClose} minWidth="800px">
 			<ModalHeader>
-				<InternalLink href={`/mentees/${menteeId}`}>
-					{menteeId}
+				<InternalLink href={`/mentees/${submissionId}`}>
+					{submissionId}
 				</InternalLink>
 			</ModalHeader>
 			<ModalBody>
@@ -39,8 +74,12 @@ export const JudgeModal = (props: JudgeModalProps) => {
 			<ModalFooter>
 				<Flex flexDir={"row"}>
 					<Spacer />
-					<Button colorScheme="primary" mr={2}>View</Button>
-					<Button colorScheme="primary">Submit</Button>
+					<Button colorScheme="primary" mr={2}
+						onClick={(type) == "pdf" ? onDownload : openInNewTab}
+					>View</Button>
+					<Button colorScheme="primary" isLoading={(status == 1)} onClick={() => {
+						onSubmit();
+					}}>Submit</Button>
 				</Flex>
 			</ModalFooter>
 		</ModalLayout >

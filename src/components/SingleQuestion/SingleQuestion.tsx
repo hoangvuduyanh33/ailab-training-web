@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Divider, Flex, Image, Spacer } from "@chakra-ui/react";
+import { Button, CircularProgress, Divider, Flex, Image, Skeleton, Spacer } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useQuery } from "src/hooks/useQuery";
 import PageLayout from "../common/PageLayout";
@@ -13,7 +13,7 @@ import { replyApi } from "src/services";
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { userSelector } from "src/store/user";
 import { useAnimationFrame } from "framer-motion";
-
+import Default from 'src/assets/default-avatar.jpeg';
 export interface ReplyProps {
   userName: string;
   userId: string;
@@ -42,16 +42,16 @@ const ChatItem = (props: ChatItemProps) => {
   const { userName, userId, content, timestamp, isQuestion } = props;
   const navigate = useNavigate();
   return (
-    <Flex flexDir={"row"} width={"full"} mt={5}>
-      <Flex alignSelf={"flex-start"} boxSize="40px" mr={5}>
-        <Image src="./logo192.png" />
+    <Flex flexDir={"row"} width={"full"} mt={5} >
+      <Flex alignSelf={"flex-start"} boxSize="40px" mr={5} borderRadius="40px">
+        <Image src={Default} borderRadius="full" />
       </Flex>
       <Flex
         alignSelf={"flex-start"}
         flexDir="column"
         width={"1200px"}
+        borderTopRadius="16px"
         border={"1px solid rgba(255,255,255,0.5)"}
-        borderRadius="16px"
         bgColor="#101414"
       >
         <Flex
@@ -77,7 +77,8 @@ const ChatItem = (props: ChatItemProps) => {
           </Flex>
         </Flex>
         <Flex
-          borderEndEndRadius={"16px"}
+          borderEndRadius={"16px"}
+          borderBottomEndRadius="16px"
           minHeight="50px"
           fontSize={"sm"}
           height="auto"
@@ -85,6 +86,7 @@ const ChatItem = (props: ChatItemProps) => {
           pt={3}
           pb={5}
           flexDirection="column"
+          bgColor={"#0d1116"}
         >
           <MarkdownPreview source={content} />
         </Flex>
@@ -101,13 +103,14 @@ const SingleQuestion = () => {
   const [replies, setReplies] = useState<any>([]);
   const [numSubmit, setNumSubmit] = useState(0);
   const { userId, name } = useAppSelector(userSelector);
+  const [isPosting, setPosting] = useState(false);
   useEffect(() => {
-    console.log("data = ", data)
+    console.log("data = ", data);
     if (data) {
       setQuestion(data.question);
       setReplies(data.replies);
     }
-  }, [data, numSubmit]);
+  }, [data, numSubmit, isPosting]);
 
   if (!loading && !question && !replies) {
     return <PageLayout>
@@ -116,6 +119,7 @@ const SingleQuestion = () => {
   }
 
   const handleCreateReply = () => {
+    setPosting(true);
     replyApi.createReply({
       userId: userId,
       userName: name,
@@ -123,14 +127,17 @@ const SingleQuestion = () => {
       content: reply,
     }).then((response) => {
       console.log("response = ", response);
+      setPosting(false);
     })
   }
 
   return (
     <PageLayout width="1400px" height="auto">
       {
-        loading && <Flex>
-          <CircularProgress isIndeterminate />
+        loading && <Flex flexDir={"column"}>
+          <Skeleton height={"50px"} width="300px" />
+          <Skeleton height={"20px"} width="500px" />
+
         </Flex>
       }
       {!loading && question && <Flex flexDir={"column"} fontSize="4xl">
@@ -163,10 +170,10 @@ const SingleQuestion = () => {
       )}
       {!loading && replies && replies.sort((a: any, b: any) => {
         if (a.createdAt > b.createdAt) {
-          return -1
+          return 1
         }
         if (a.createdAt < b.createdAt) {
-          return 1
+          return -1
         }
         return 0
       }).map((reply: any) => {
@@ -180,8 +187,8 @@ const SingleQuestion = () => {
           />
         );
       })}
-      {!loading && <Flex flexDir="row" maxWidth={"1300px"} mt={5}>
-        <Image src="./logo192.png" boxSize={"40px"} mr={5} />
+      {!loading && question && < Flex flexDir="row" maxWidth={"1300px"} mt={5}>
+        <Image src={Default} boxSize={"40px"} mr={5} borderRadius="full" />
         <Flex flexDir={"column"}>
           <MDEditor
             preview="edit"
@@ -193,13 +200,19 @@ const SingleQuestion = () => {
           />
           <Flex flexDirection={"row"}>
             <Spacer />
-            <Button mt={2} colorScheme={"primary"} width="150px" onClick={handleCreateReply}>
-              Confirm
+            <Button mt={2}
+              isLoading={isPosting}
+              colorScheme={"primary"} width="150px" isDisabled={isPosting} onClick={() => { handleCreateReply(); setNumSubmit(numSubmit + 1); setReply("") }}>
+              {"Confirm"}
             </Button>
           </Flex>
         </Flex>
       </Flex>}
-    </PageLayout>
+      {
+        !loading && !question && "No data"
+      }
+
+    </PageLayout >
   );
 };
 

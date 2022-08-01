@@ -12,6 +12,7 @@ import MentorCourseTable, {
 } from "../Courses/CourseTables/MentorCourseTable";
 import AdminDashboard from "./Dashboard/AdminDashboard";
 import MenteeDashboard from "./Dashboard/MenteeDashboard";
+import MentorDashboard from "./Dashboard/MentorDashboard";
 
 interface TagOverviewProps {
   name: string;
@@ -113,7 +114,7 @@ export default function Summary() {
         <MenteeDashboard />
       )}
       {role === "mentor" && (
-        <MentorCourseTable courses={exampleMentorCourses} />
+        <MentorDashboard />
       )}
     </PageLayout>
   );

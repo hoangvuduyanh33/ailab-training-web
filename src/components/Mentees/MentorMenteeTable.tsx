@@ -109,7 +109,7 @@ const MentorMenteeTable = () => {
                 {mentee.class ? mentee.class : "--"}
               </Flex>
               <Flex width={colWidth[4]}>
-                {mentee.joinedAt ? timestampToDate(mentee.joinedAt) : "--"}
+                {mentee.createdAt ? timestampToDate(mentee.createdAt) : "--"}
               </Flex>
             </Flex>
           </>

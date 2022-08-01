@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Spacer, Text } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, Spacer, Text } from "@chakra-ui/react";
 import { ChatIcon } from "@chakra-ui/icons";
 import { time } from "console";
 import { useEffect, useState } from "react";
@@ -83,6 +83,7 @@ const QuestionRow = (props: QuestionProps) => {
 const Questions = () => {
   const [questions, loading] = useQuestions();
   console.log("questions = ", questions);
+
   const QuestionHead = () => {
     return (
       <Flex
@@ -95,6 +96,8 @@ const Questions = () => {
         borderTopRadius={"16px"}
       >
         <Flex ml={8}> {questions?.length || 0} Questions </Flex>
+        <Spacer></Spacer>
+        <Button colorScheme={"primary"} width="100px" mr={5}>Add question</Button>
       </Flex>
     );
   };

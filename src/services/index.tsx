@@ -10,7 +10,7 @@ const authApi = {
 }
 
 const userApi = {
-  getMentee: (params: GetMenteeParams) => axiosClient.get(`/mentee?mentorId=${params.mentorId || ""}&mentorEmail=${params.mentorEmail || ""}&menteeId=${params.menteeId || ""}&menteeEmail=${params.menteeEmail || ""}&taskId=${params.taskId}`),
+  getMentee: (params: GetMenteeParams) => axiosClient.get(`/mentee?mentorId=${params.mentorId || ""}&mentorEmail=${params.mentorEmail || ""}&menteeId=${params.menteeId || ""}&menteeEmail=${params.menteeEmail || ""}&taskId=${params.taskId || ""}`),
   getMentor: (params: GetMentorParams) => axiosClient.get(`/mentor?mentorId=${params.mentorId || ""}&mentorEmail=${params.mentorEmail || ""}&menteeId=${params.menteeId || ""}&menteeEmail=${params.menteeEmail || ""}`),
   getAdmin: (params: any) => axiosClient.get("/admin", params),
   createMentor: (params: CreateMentorParams) => axiosClient.post("/mentor", params),
@@ -19,14 +19,14 @@ const userApi = {
 }
 
 const taskApi = {
-  getTasks: (params: any) => axiosClient.get(`/task?taskId=${params.taskId || ""}&menteeId=${params.menteeId || ""}&mentorId=${params.mentorId || ""}`),
+  getTasks: (params: any) => axiosClient.get(`/task?taskId=${params?.taskId || ""}&menteeId=${params.menteeId || ""}&mentorId=${params.mentorId || ""}`),
   createTask: (params: any) => axiosClient.post(`/task`, params),
   assignTask: (params: any) => axiosClient.post(`/task/assign`, params)
 }
 
 
 const submissionApi = {
-  getSubmissions: (params: any) => axiosClient.get(`/submission?taskId=${params.taskId || ""}&mentorId=${params.mentorId || ""}&menteeId=${params.menteeId || ""}&submissionId=${params.submissionId || ""}`),
+  getSubmissions: (params: any) => axiosClient.get(`/submission?taskId=${params?.taskId || ""}&mentorId=${params.mentorId || ""}&menteeId=${params.menteeId || ""}&submissionId=${params.submissionId || ""}`),
   submitSubmission: (params: any) => axiosClient.post("/submission", params),
   scoring: (params: any) => axiosClient.post("/grading", params)
 }
